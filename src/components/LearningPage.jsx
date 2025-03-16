@@ -4,8 +4,6 @@ import { Home, Upload, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import DOMPurify from 'dompurify';
 
-const API_URL = import.meta.env.VITE_BACKEND_URL;
-
 const LearningPage = ({ setShowLearningPage }) => {
   const { user } = useUser();
   const [messages, setMessages] = useState([
@@ -42,7 +40,7 @@ const LearningPage = ({ setShowLearningPage }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/ask`, {
+      const response = await fetch('http://localhost:5000/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: inputText })
@@ -85,7 +83,7 @@ const LearningPage = ({ setShowLearningPage }) => {
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${API_URL}/upload`, {
+      const response = await fetch('http://localhost:5000/upload', {
         method: 'POST',
         body: formData
       });
