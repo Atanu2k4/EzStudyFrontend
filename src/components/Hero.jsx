@@ -51,10 +51,9 @@ const Hero = ({ setShowLearningPage }) => {
               </button>
             </SignUpButton>
           )}
-
-          <Link to="/about" className="px-6 py-2 bg-transparent border border-gray-300 text-gray-700 font-bold rounded-full text-sm hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
-            Learn More
-          </Link>
+          <a href="#about" className="px-6 py-2 bg-transparent border border-gray-300 text-gray-700 font-bold rounded-full text-sm hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+              Learn More
+          </a>
         </div>
 
         {/* Feature Pills */}
@@ -72,7 +71,7 @@ const Hero = ({ setShowLearningPage }) => {
           <div className="absolute -top-2 -left-2 w-full h-full bg-gradient-to-br from-indigo-100 to-red-100 rounded-lg -rotate-3 shadow-lg"></div>
 
           {/* Lottie Animation Container - Reduced Size and Padding */}
-          <div className="relative bg-white p-4 rounded-lg shadow-xl border border-gray-100 flex flex-col items-center justify-center backdrop-blur-sm bg-white/90">
+          <div className="relative p-4 rounded-lg shadow-xl border border-gray-100 flex flex-col items-center justify-center backdrop-blur-sm bg-white/90">
             <div className="absolute -right-2 -top-2 bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-2 rounded-full shadow-lg">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
