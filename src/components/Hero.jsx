@@ -1,60 +1,113 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useUser, SignUpButton } from "@clerk/clerk-react";
+import { Link } from "react-router-dom"; // Assuming you're using React Router
 
 const Hero = ({ setShowLearningPage }) => {
   const { isSignedIn } = useUser();
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Removed the useEffect that was causing automatic redirect
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   return (
-    <section className="w-full h-screen flex flex-col md:flex-row items-center justify-center text-center md:text-left bg-gradient-to-b from-white to-gray-50 px-6 md:px-16 overflow-hidden relative">
-      {/* Background Elements */}
-      <div className="absolute -top-20 -left-20 w-64 h-64 bg-gray-400 opacity-20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-20 w-64 h-64 bg-zinc-700 opacity-20 rounded-full blur-3xl"></div>
-      <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-gray-300 opacity-30 rounded-full blur-xl"></div>
+    <section className="w-full h-screen flex flex-col md:flex-row items-center justify-center text-center md:text-left bg-gradient-to-br from-slate-50 via-white to-blue-50 px-6 md:px-16 overflow-hidden relative">
+      {/* Enhanced Background Elements */}
+      <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-400 opacity-10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-700 opacity-10 rounded-full blur-3xl"></div>
+      <div className="absolute top-1/4 right-1/3 w-64 h-64 bg-red-300 opacity-10 rounded-full blur-3xl"></div>
+
+      {/* Decorative Elements */}
+      <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-r from-blue-600/5 to-indigo-700/5"></div>
+      <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-r from-indigo-700/5 to-blue-600/5"></div>
+
       {/* Content */}
-      <div className="flex-1 space-y-6 z-10">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight max-w-3xl">
-          Unlock <span className="bg-gradient-to-r from-blue-600 to-red-400 text-transparent bg-clip-text">AI-Powered Personalized Learning</span>
+      <div className={`flex-1 space-y-6 z-10 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight max-w-2xl">
+          Unlock <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-red-500 text-transparent bg-clip-text">AI-Powered Personalized Learning</span>
         </h1>
-        <p className="text-lg text-gray-600 max-w-xl">
+        <p className="text-sm md:text-base text-gray-600 max-w-xl">
           Transform your study experience with AI-driven insights, tailored learning plans, and smart note generation.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row gap-3 pt-3">
           {isSignedIn ? (
             <button
               onClick={() => setShowLearningPage(true)}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-full text-lg shadow-lg hover:scale-105 transition-transform duration-300"
+              className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-full text-sm shadow-xl hover:shadow-blue-500/20 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
             >
-              Start Learning with AI
+              <span>Start Learning with AI</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
             </button>
           ) : (
             <SignUpButton mode="modal">
-              <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-red-400 text-white font-bold rounded-full text-lg shadow-lg hover:scale-105 transition-transform duration-300">
-                Start Learning
+              <button className="px-6 py-2 bg-gradient-to-r from-blue-600 via-purple-500 to-red-500 text-white font-bold rounded-full text-sm shadow-xl hover:shadow-pink-500/20 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                <span>Start Learning</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
               </button>
             </SignUpButton>
           )}
+
+          <Link to="/about" className="px-6 py-2 bg-transparent border border-gray-300 text-gray-700 font-bold rounded-full text-sm hover:bg-gray-50 hover:border-gray-400 transition-all duration-300">
+            Learn More
+          </Link>
+        </div>
+
+        {/* Feature Pills */}
+        <div className="flex flex-wrap gap-2 pt-2 justify-center md:justify-start">
+          <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">AI-Powered</span>
+          <span className="px-3 py-1 bg-purple-50 text-purple-600 rounded-full text-xs font-medium">Personalized</span>
+          <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-medium">Adaptive</span>
         </div>
       </div>
-      {/* Animations */}
-      <div className="flex-1 flex flex-col items-center justify-center mt-10 md:mt-0 relative z-10">
-        <div className="relative w-full max-w-lg">
-          <div className="absolute -top-4 -left-4 w-full h-full bg-zinc-200 rounded-xl rotate-3"></div>
-          <div className="absolute -top-2 -left-2 w-full h-full bg-gray-300 rounded-xl -rotate-2"></div>
-          {/* Lottie Animation Container */}
-          <div className="relative bg-white p-6 rounded-xl shadow-xl border border-gray-100 flex flex-col items-center justify-center">
+
+      {/* Animations - Reduced Size */}
+      <div className={`flex-1 flex flex-col items-center justify-center mt-8 md:mt-0 relative z-10 transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+        <div className="relative w-full max-w-md">
+          <div className="absolute -top-4 -left-4 w-full h-full bg-gradient-to-br from-blue-200 to-indigo-100 rounded-lg rotate-6 shadow-lg"></div>
+          <div className="absolute -top-2 -left-2 w-full h-full bg-gradient-to-br from-indigo-100 to-red-100 rounded-lg -rotate-3 shadow-lg"></div>
+
+          {/* Lottie Animation Container - Reduced Size and Padding */}
+          <div className="relative bg-white p-4 rounded-lg shadow-xl border border-gray-100 flex flex-col items-center justify-center backdrop-blur-sm bg-white/90">
+            <div className="absolute -right-2 -top-2 bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-2 rounded-full shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+
             <DotLottieReact
               src="https://lottie.host/940d982d-7f6f-4100-b740-e874954cea02/HIYUCWcoQJ.lottie"
               loop
               autoplay
+              className="w-full h-32"
             />
+            <div className="w-full h-px bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full my-2"></div>
             <DotLottieReact
               src="https://lottie.host/a33024c3-2554-45d7-8959-ef10c82ccb96/Z2KJN74cgJ.lottie"
               loop
               autoplay
+              className="w-full h-32"
             />
+
+            {/* Stats Section - Smaller Text and Compact Layout */}
+            <div className="grid grid-cols-3 gap-2 w-full mt-3 text-center">
+              <div className="bg-gray-50 p-1 rounded">
+                <p className="text-base font-bold text-blue-600">24/7</p>
+                <p className="text-xs text-gray-500">Learning</p>
+              </div>
+              <div className="bg-gray-50 p-1 rounded">
+                <p className="text-base font-bold text-indigo-600">100%</p>
+                <p className="text-xs text-gray-500">Personalized</p>
+              </div>
+              <div className="bg-gray-50 p-1 rounded">
+                <p className="text-base font-bold text-red-500">AI</p>
+                <p className="text-xs text-gray-500">Powered</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
