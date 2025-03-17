@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useUser, UserButton } from '@clerk/clerk-react';
 import { Home, Upload, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import DOMPurify from 'dompurify';
+import remarkGfm from 'remark-gfm';
 
 const LearningPage = ({ setShowLearningPage }) => {
   const { user } = useUser();
@@ -125,7 +125,9 @@ const LearningPage = ({ setShowLearningPage }) => {
         {messages.map((message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
             <div className={`max-w-md p-4 rounded-xl ${message.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-white border'}`}>
-              <ReactMarkdown>{DOMPurify.sanitize(message.text)}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {message.text}
+              </ReactMarkdown>
             </div>
           </div>
         ))}
