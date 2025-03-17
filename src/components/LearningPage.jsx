@@ -40,7 +40,7 @@ const LearningPage = ({ setShowLearningPage }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/ask', {
+      const response = await fetch('https://ezstudybackend-1.onrender.com/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: inputText })
@@ -83,7 +83,7 @@ const LearningPage = ({ setShowLearningPage }) => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:5000/upload', {
+      const response = await fetch('https://ezstudybackend-1.onrender.com/upload', {
         method: 'POST',
         body: formData
       });
