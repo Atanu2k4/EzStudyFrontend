@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useUser, UserButton } from "@clerk/clerk-react";
-import { Home, Upload, X } from "lucide-react";
+import { Home, Upload } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -17,6 +17,13 @@ const LearningPage = ({ setShowLearningPage }) => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [files, setFiles] = useState([]);
+
+  // New state to store the analysis of the last uploaded PDF (virtual history block)
+  const [lastPdfSummary, setLastPdfSummary] = useState("");
+
+  // State that controls if the PDF context should be included in queries
+  const [usePdfContext, setUsePdfContext] = useState(false);
+
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -24,7 +31,6 @@ const LearningPage = ({ setShowLearningPage }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Handle Sending Messages
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputText.trim()) return;
@@ -35,10 +41,15 @@ const LearningPage = ({ setShowLearningPage }) => {
       text: inputText,
       timestamp: new Date(),
     };
-
     setMessages((prev) => [...prev, userMessage]);
     setInputText("");
     setIsLoading(true);
+
+    // Build the query: if the PDF context is enabled and exists, add it to the query payload.
+    let queryPayload = inputText;
+    if (usePdfContext && lastPdfSummary) {
+      queryPayload = `Based on the following PDF analysis:\n\n${lastPdfSummary}\n\nAnswer the following query:\n${inputText}`;
+    }
 
     try {
       const response = await fetch(
@@ -46,36 +57,30 @@ const LearningPage = ({ setShowLearningPage }) => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: inputText, sessionId: user.id }),
+          body: JSON.stringify({ query: queryPayload }),
         }
       );
-
       const data = await response.json();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: "ai",
-          text: data.response || "I'm not sure how to respond.",
-          timestamp: new Date(),
-        },
-      ]);
+      const aiResponse = {
+        id: Date.now(),
+        sender: "ai",
+        text: data.response || "I'm not sure how to respond to that.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, aiResponse]);
     } catch (error) {
       console.error("Error fetching AI response:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: "ai",
-          text: "Error processing request. Please try again.",
-          timestamp: new Date(),
-        },
-      ]);
+      const errorResponse = {
+        id: Date.now(),
+        sender: "ai",
+        text: "Sorry, I couldn't process your request. Please try again.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorResponse]);
     }
     setIsLoading(false);
   };
 
-  // Handle File Upload
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -94,7 +99,6 @@ const LearningPage = ({ setShowLearningPage }) => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("sessionId", user.id);
 
     try {
       const response = await fetch(
@@ -104,19 +108,22 @@ const LearningPage = ({ setShowLearningPage }) => {
           body: formData,
         }
       );
-
       const data = await response.json();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          sender: "ai",
-          text:
-            data.summary ||
-            "I've analyzed your file, but couldn't generate a summary.",
-          timestamp: new Date(),
-        },
-      ]);
+
+      const aiMsg = {
+        id: Date.now(),
+        sender: "ai",
+        text:
+          data.summary ||
+          "I've analyzed your file, but couldn't generate a summary.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+
+      // Check if the file is a PDF, and if so, store its analysis in the virtual history block.
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        setLastPdfSummary(data.summary || "");
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
       setMessages((prev) => [
@@ -124,14 +131,14 @@ const LearningPage = ({ setShowLearningPage }) => {
         {
           id: Date.now(),
           sender: "ai",
-          text: "Error processing file. Please try again.",
+          text: "Sorry, I couldn't process your file. Please try again.",
           timestamp: new Date(),
         },
       ]);
     }
-
-    e.target.value = ""; // Reset file input field
     setIsLoading(false);
+    // Reset file input so that the same file can be uploaded again if needed.
+    fileInputRef.current.value = null;
   };
 
   return (
@@ -151,8 +158,16 @@ const LearningPage = ({ setShowLearningPage }) => {
           <UserButton afterSignOutUrl="/" />
         </div>
       </div>
-
       <div className="flex-1 overflow-y-auto p-4 max-w-5xl mx-auto w-full">
+        {/* Virtual history block showing the last PDF analysis */}
+        {lastPdfSummary && (
+          <div className="bg-green-100 p-4 rounded-lg mb-4">
+            <h2 className="font-bold mb-2">PDF Analysis History</h2>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {lastPdfSummary}
+            </ReactMarkdown>
+          </div>
+        )}
         {messages.map((message) => (
           <div
             key={message.id}
@@ -176,60 +191,51 @@ const LearningPage = ({ setShowLearningPage }) => {
         {isLoading && <p className="text-gray-500">AI is typing...</p>}
         <div ref={messagesEndRef} />
       </div>
-
-      {/* Uploaded Files Display */}
-      <div className="max-w-5xl mx-auto w-full p-4">
-        {files.length > 0 && (
-          <div className="bg-gray-100 p-3 rounded-lg">
-            <p className="text-gray-700 font-medium">Uploaded Files:</p>
-            <ul className="text-sm text-gray-600">
-              {files.map((file, index) => (
-                <li key={index} className="flex items-center">
-                  <span className="mr-2">📄 {file.name}</span>
-                  <button
-                    onClick={() =>
-                      setFiles(files.filter((_, i) => i !== index))
-                    }
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <X size={14} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-
       <div className="bg-white border-t p-4">
         <div className="max-w-5xl mx-auto">
-          <form onSubmit={handleSendMessage} className="flex space-x-2">
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ask something..."
-              className="flex-1 border rounded-full px-4 py-2"
-            />
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current.click()}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full flex items-center"
-            >
-              <Upload size={18} />
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-full"
-            >
-              Send
-            </button>
+          <form
+            onSubmit={handleSendMessage}
+            className="flex flex-col sm:flex-row sm:space-x-2"
+          >
+            <div className="flex-1 flex items-center space-x-2 mb-2 sm:mb-0">
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Ask something..."
+                className="flex-1 border rounded-full px-4 py-2"
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current.click()}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full flex items-center"
+              >
+                <Upload size={18} />
+              </button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <label className="flex items-center space-x-1 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={usePdfContext}
+                  onChange={(e) => setUsePdfContext(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                <span>Include PDF context</span>
+              </label>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-full"
+              >
+                Send
+              </button>
+            </div>
           </form>
         </div>
       </div>
