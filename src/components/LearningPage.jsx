@@ -17,7 +17,7 @@ const LearningPage = ({ setShowLearningPage }) => {
     {
       id: Date.now(),
       sender: "ai",
-      text: "Welcome to your AI learning assistant! What topic would you like to learn about today? You can also upload files (PDF, PPT, DOC, TXT) for me to analyze.",
+      text: "Welcome to your AI learning assistant! What topic would you like to learn about today?",
       timestamp: new Date(),
     },
   ]);
@@ -231,6 +231,7 @@ const LearningPage = ({ setShowLearningPage }) => {
           transition: "background-position 0.3s ease",
         }}
       >
+
         {/* Messages with improved styling and animations */}
         {messages.map((message) => (
           <div
