@@ -231,29 +231,6 @@ const LearningPage = ({ setShowLearningPage }) => {
           transition: "background-position 0.3s ease",
         }}
       >
-        {/* Document analysis card with improved styling */}
-        {lastDocSummary && (
-          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl mb-6 shadow-sm border border-emerald-200 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1">
-            <div className="flex items-center mb-3">
-              <FileText className="text-emerald-500 mr-2" size={20} />
-              <h2 className="font-bold text-lg text-emerald-800">
-                Document Analysis
-              </h2>
-            </div>
-            <div className="prose prose-emerald max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {lastDocSummary}
-              </ReactMarkdown>
-            </div>
-            {useFileContext && (
-              <div className="mt-3 flex items-center text-sm text-emerald-600">
-                <CheckCircle size={14} className="mr-1" />
-                <span>Using this context for your questions</span>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Messages with improved styling and animations */}
         {messages.map((message) => (
           <div
