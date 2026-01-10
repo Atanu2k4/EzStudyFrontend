@@ -2,11 +2,34 @@
 import { useState } from "react";
 import { Field, Label, Switch } from "@headlessui/react";
 
-export default function Contact() {
+export default function Contact({ setActiveLegal }) {
   const [agreed, setAgreed] = useState(false);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!agreed) {
+      alert("Please agree to the terms and conditions first.");
+      return;
+    }
+
+    const formData = new FormData(e.target);
+    const firstName = formData.get("first-name");
+    const lastName = formData.get("last-name");
+    const email = formData.get("email");
+    const message = formData.get("message");
+
+    const subject = encodeURIComponent(`New EzStudy Message from ${firstName} ${lastName}`);
+    const body = encodeURIComponent(
+      `Name: ${firstName} ${lastName}\n` +
+      `Email: ${email}\n\n` +
+      `Message:\n${message}`
+    );
+
+    window.location.href = `mailto:atanu.saha2004@gmail.com?subject=${subject}&body=${body}`;
+  };
+
   return (
-    <div id="contact" className="relative bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <div id="contact" className="relative bg-white dark:bg-gray-900 px-4 sm:px-6 py-16 sm:py-24 md:py-32 lg:px-8 scroll-mt-20 sm:scroll-mt-24">
       {/* Decorative Background */}
       <div
         aria-hidden="true"
@@ -19,65 +42,68 @@ export default function Contact() {
 
       {/* Contact Form */}
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Merriweather']">
           Get in Touch
         </h2>
-        <p className="mt-3 text-lg text-gray-600">
+        <p className="mt-2 sm:mt-3 text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400 font-['Inter']">
           Have questions? Feel free to reach out to us, and we’ll respond as
           soon as possible.
         </p>
       </div>
 
       <form
-        action="#"
-        method="POST"
-        className="mx-auto mt-16 max-w-xl space-y-6 sm:mt-20"
+        onSubmit={handleSubmit}
+        className="mx-auto mt-8 sm:mt-16 md:mt-20 max-w-xl space-y-4 sm:space-y-6 px-4 sm:px-0"
       >
         {/* Name Fields */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-semibold text-gray-900">
+          <div className="group">
+            <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
               First Name
             </label>
             <input
               type="text"
               name="first-name"
-              className="mt-2 w-full rounded-lg border-gray-300 px-4 py-2 text-gray-900 shadow-md focus:outline-indigo-600"
+              className="mt-1 sm:mt-2 w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 sm:px-4 py-2.5 text-gray-900 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+              placeholder="John"
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-900">
+          <div className="group">
+            <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
               Last Name
             </label>
             <input
               type="text"
               name="last-name"
-              className="mt-2 w-full rounded-lg border-gray-300 px-4 py-2 text-gray-900 shadow-md focus:outline-indigo-600"
+              className="mt-1 sm:mt-2 w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 sm:px-4 py-2.5 text-gray-900 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+              placeholder="Doe"
             />
           </div>
         </div>
 
         {/* Email */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900">
+        <div className="group">
+          <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
             Email
           </label>
           <input
             type="email"
             name="email"
-            className="mt-2 w-full rounded-lg border-gray-300 px-4 py-2 text-gray-900 shadow-md focus:outline-indigo-600"
+            className="mt-1 sm:mt-2 w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 sm:px-4 py-2.5 text-gray-900 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+            placeholder="john@example.com"
           />
         </div>
 
         {/* Message */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900">
+        <div className="group">
+          <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
             Message
           </label>
           <textarea
             name="message"
             rows={4}
-            className="mt-2 w-full rounded-lg border-gray-300 px-4 py-2 text-gray-900 shadow-md focus:outline-indigo-600"
+            className="mt-1 sm:mt-2 w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 sm:px-4 py-2.5 text-gray-900 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
+            placeholder="How can we help you?"
           />
         </div>
 
@@ -86,29 +112,32 @@ export default function Contact() {
           <Switch
             checked={agreed}
             onChange={setAgreed}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-              agreed ? "bg-indigo-600" : "bg-gray-300"
-            }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${agreed ? "bg-indigo-600" : "bg-gray-300 dark:bg-gray-700"
+              }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                agreed ? "translate-x-6" : "translate-x-1"
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${agreed ? "translate-x-6" : "translate-x-1"
+                }`}
             />
           </Switch>
-          <Label className="text-sm text-gray-600">
+          <Label className="text-sm text-gray-600 dark:text-gray-400 font-['Inter']">
             I agree to the{" "}
-            <a href="#" className="text-indigo-600 font-semibold">
+            <button
+              type="button"
+              onClick={() => setActiveLegal('terms')}
+              className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300 cursor-pointer group font-['Inter']"
+            >
               terms & conditions.
-            </a>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+            </button>
           </Label>
         </Field>
 
         {/* Submit Button */}
-        <div>
+        <div className="pt-2">
           <button
             type="submit"
-            className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-lg font-semibold text-white shadow-lg transition hover:bg-indigo-500"
+            className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 dark:from-indigo-500 dark:to-blue-500 dark:hover:from-indigo-600 dark:hover:to-blue-600 px-4 py-3 text-lg font-bold text-white shadow-xl hover:shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 font-['Inter']"
           >
             Send Message
           </button>
