@@ -112,9 +112,8 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
       const x = e.clientX / window.innerWidth;
       const y = e.clientY / window.innerHeight;
 
-      chatContainerRef.current.style.backgroundPosition = `${x * 5}px ${
-        y * 5
-      }px`;
+      chatContainerRef.current.style.backgroundPosition = `${x * 5}px ${y * 5
+        }px`;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -194,7 +193,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
     try {
       const response = await fetch(
-        "https://ezstudybackend-1.onrender.com/ask",
+        `${import.meta.env.VITE_BACKEND_URL}/ask`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -245,7 +244,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
     try {
       const response = await fetch(
-        "https://ezstudybackend-1.onrender.com/upload",
+        `${import.meta.env.VITE_BACKEND_URL}/upload`,
         {
           method: "POST",
           body: formData,
@@ -496,9 +495,8 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
       <div className="flex flex-1 overflow-hidden">
         {/* Chat History Sidebar */}
         <div
-          className={`${
-            showSidebar ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 absolute md:relative z-30 h-[calc(100%-4rem)] w-72 bg-white shadow-lg transition-transform duration-300 ease-in-out flex flex-col`}
+          className={`${showSidebar ? "translate-x-0" : "-translate-x-full"
+            } md:translate-x-0 absolute md:relative z-30 h-[calc(100%-4rem)] w-72 bg-white shadow-lg transition-transform duration-300 ease-in-out flex flex-col`}
         >
           <div className="flex items-center justify-between p-4 border-b">
             <h2 className="font-semibold text-gray-700 flex items-center">
@@ -528,9 +526,8 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
               <div
                 key={chat.id}
                 onClick={() => switchChat(chat.id)}
-                className={`p-3 border-b cursor-pointer hover:bg-indigo-50 transition-colors ${
-                  chat.isActive ? "bg-indigo-100" : ""
-                }`}
+                className={`p-3 border-b cursor-pointer hover:bg-indigo-50 transition-colors ${chat.isActive ? "bg-indigo-100" : ""
+                  }`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex items-center space-x-2">
@@ -584,16 +581,14 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.sender === "user" ? "justify-end" : "justify-start"
-                } mb-4 animate-fadeIn`}
+                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"
+                  } mb-4 animate-fadeIn`}
               >
                 <div
-                  className={`max-w-2xl p-4 rounded-xl shadow-sm ${
-                    message.sender === "user"
+                  className={`max-w-2xl p-4 rounded-xl shadow-sm ${message.sender === "user"
                       ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
                       : "bg-white border border-gray-200"
-                  } transform transition-all duration-300 hover:shadow-md`}
+                    } transform transition-all duration-300 hover:shadow-md`}
                 >
                   <div className="prose max-w-none overflow-x-auto break-words">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -601,11 +596,10 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     </ReactMarkdown>
                   </div>
                   <div
-                    className={`text-xs mt-2 opacity-70 ${
-                      message.sender === "user"
+                    className={`text-xs mt-2 opacity-70 ${message.sender === "user"
                         ? "text-indigo-100"
                         : "text-gray-500"
-                    }`}
+                      }`}
                   >
                     {formatTime(message.timestamp)}
                   </div>

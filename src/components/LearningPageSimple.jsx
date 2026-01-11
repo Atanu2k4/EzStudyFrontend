@@ -142,13 +142,23 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
             // Clear uploaded files after successful send
             setUploadedFiles([]);
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Chat API Error:", error);
+            let errorMessage = "Failed to connect to the server. Please try again.";
+
+            if (error.message.includes("fetch")) {
+                errorMessage = "Network error: Unable to reach the server. Check your internet connection.";
+            } else if (error.message.includes("CORS")) {
+                errorMessage = "Connection blocked. Please refresh the page and try again.";
+            } else if (error.message) {
+                errorMessage = `Server error: ${error.message}`;
+            }
+
             setMessages((prev) => [
                 ...prev,
                 {
                     id: Date.now() + 1,
                     sender: "ai",
-                    text: `⚠️ **Error:** ${error.message}\n\nMake sure the backend server is running on port 3001.`,
+                    text: `⚠️ **Error:** ${errorMessage}\n\nIf this problem continues, please contact support.`,
                     timestamp: new Date(),
                     animated: true,
                 },
