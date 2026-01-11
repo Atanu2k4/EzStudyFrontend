@@ -251,7 +251,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       <div className={`fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3 w-[95%] sm:w-[90%] max-w-6xl z-50 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
         <nav className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-3xl rounded-full px-3 sm:px-8 py-3 sm:py-4 flex items-center justify-between flex-1 font-[Rubik]">
           {/* Logo */}
-          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow-sm hover:scale-105 transition-transform cursor-default font-['Playfair_Display']">
+          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow hover:scale-105 transition-transform cursor-default font-['Playfair_Display']">
             EzStudy
           </div>
 
@@ -392,9 +392,9 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
                   {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
-                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-96 bg-white dark:bg-gray-800 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                       <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden">
                           {false ? (
                             <img
                               src={user.profileImage}
@@ -406,9 +406,6 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                               {user.name?.charAt(0) || user.email?.charAt(0)}
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Camera size={16} className="text-white" />
-                          </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
@@ -429,26 +426,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                         className="hidden"
                       />
 
-                      {/* Upload button */}
-                      <div className="mb-3">
-                        <button
-                          onClick={handleImageClick}
-                          disabled={isUploadingImage}
-                          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-md disabled:hover:scale-100"
-                        >
-                          {isUploadingImage ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                              <span className="text-sm font-medium font-['Inter']">Uploading...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Camera size={16} />
-                              <span className="text-sm font-medium font-['Inter']">Upload Photo</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
+
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
