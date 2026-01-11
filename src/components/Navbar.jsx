@@ -393,28 +393,37 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                   {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
                     <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
-                      <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden">
-                          {false ? (
-                            <img
-                              src={user.profileImage}
-                              alt="Profile"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold">
-                              {user.name?.charAt(0) || user.email?.charAt(0)}
-                            </div>
-                          )}
+                      <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center space-x-3 flex-1">
+                          <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                            {false ? (
+                              <img
+                                src={user.profileImage}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold">
+                                {user.name?.charAt(0) || user.email?.charAt(0)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Cambria_Math']">
+                              {user.name || 'User'}
+                            </h3>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Cambria_Math']">
+                              {user.email}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Cambria_Math']">
-                            {user.name || 'User'}
-                          </h3>
-                          <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Cambria_Math']">
-                            {user.email}
-                          </p>
-                        </div>
+                        <button
+                          onClick={() => setIsProfileDropdownOpen(false)}
+                          className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 ml-2"
+                          aria-label="Close profile"
+                        >
+                          <X size={16} className="text-gray-700 dark:text-gray-100 hover:text-gray-900 dark:hover:text-white" />
+                        </button>
                       </div>
 
                       {/* Hidden file input */}
