@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
-    const [messages, setMessages] = useState([
+    const initialMessages = [
         {
             id: 1,
             sender: "ai",
@@ -12,7 +12,9 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
             timestamp: new Date(),
             animated: true,
         },
-    ]);
+    ];
+
+    const [messages, setMessages] = useState(initialMessages);
     const [inputText, setInputText] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
@@ -67,6 +69,14 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
                 ]);
             }, 800);
         });
+    };
+
+    const newChat = () => {
+        setMessages(initialMessages);
+        setUploadedFiles([]);
+        setInputText("");
+        setIsLoading(false);
+        setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
     };
 
     const getFileRecognitionMessage = (fileType, fileName) => {
@@ -230,12 +240,21 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
                     <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Cambria_Math']">
                         AI Learning Console
                     </h2>
-                    <button
-                        onClick={onLogout}
-                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-md"
-                    >
-                        <LogOut size={20} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={newChat}
+                            title="New Chat"
+                            className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            New Chat
+                        </button>
+                        <button
+                            onClick={onLogout}
+                            className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-md"
+                        >
+                            <LogOut size={20} />
+                        </button>
+                    </div>
                 </header>
 
                 {/* Chat Area */}
