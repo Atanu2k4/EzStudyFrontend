@@ -68,12 +68,12 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess, initialMode = 'signin' }) =
                     <X size={20} className="text-gray-500" />
                 </button>
 
-                <div className="p-8">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text">
+                <div className="p-6 sm:p-8">
+                    <div className="text-center mb-6 sm:mb-8">
+                        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text">
                             {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
                         </h2>
-                        <p className="text-gray-500 dark:text-gray-400 mt-2">
+                        <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm sm:text-base">
                             {mode === 'signin' ? 'Sign in to continue your journey' : 'Join EzStudy and start learning'}
                         </p>
                     </div>
