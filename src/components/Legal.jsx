@@ -121,7 +121,7 @@ const Legal = ({ type, onClose }) => {
                         className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
                     >
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-300" />
-                        <span className="font-medium font-['Inter']">Back to Home</span>
+                        <span className="font-medium font-['Cambria_Math']">Back to Home</span>
                     </button>
                     <h2 className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text font-['Cambria_Math']">{current.title}</h2>
                     <button
