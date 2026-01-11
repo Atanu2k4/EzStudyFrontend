@@ -1,9 +1,26 @@
 import React from "react";
 
-const Footer = () => {
+const Footer = ({ setActiveLegal }) => {
   return (
-    <footer className="bg-gray-900 text-white py-6 text-center">
-      <p className="text-sm">&copy; {new Date().getFullYear()} EzNotesAI. All rights reserved.</p>
+    <footer className="bg-white dark:bg-black text-gray-600 dark:text-gray-400 py-8 sm:py-12 text-center px-4 border-t border-gray-100 dark:border-gray-900 transition-colors duration-500">
+      <div className="max-w-6xl mx-auto flex flex-col items-center space-y-4">
+        <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text font-['Rubik']">
+          EzStudy
+        </div>
+        <p className="text-xs sm:text-sm transition-colors hover:text-gray-900 dark:hover:text-white cursor-default font-['Inter']">
+          &copy; {new Date().getFullYear()} EzStudyAI. Empowering learners with AI.
+        </p>
+        <div className="flex space-x-6 text-sm">
+          <button onClick={() => setActiveLegal('privacy')} className="relative text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 cursor-pointer group font-['Inter']">
+            Privacy Policy
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+          </button>
+          <button onClick={() => setActiveLegal('services')} className="relative text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 cursor-pointer group font-['Inter']">
+            Terms of Service
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-red-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+          </button>
+        </div>
+      </div>
     </footer>
   );
 };

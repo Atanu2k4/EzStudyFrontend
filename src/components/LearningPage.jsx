@@ -17,8 +17,45 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const LearningPage = ({ setShowLearningPage }) => {
-  const { user } = useUser();
+// Sub-components moved to top to avoid initialization errors
+const StatCard = ({ label, value, sub, color }) => {
+  const colorMap = {
+    blue: 'border-blue-100 bg-blue-50/30 text-blue-600',
+    purple: 'border-purple-100 bg-purple-50/30 text-purple-600',
+    green: 'border-green-100 bg-green-50/30 text-green-600',
+  };
+
+  return (
+    <div className={`p-6 bg-white dark:bg-gray-800 rounded-3xl border ${colorMap[color] || 'border-gray-100'} shadow-sm`}>
+      <p className="text-gray-500 dark:text-gray-400 text-sm font-medium font-['Inter']">{label}</p>
+      <p className="text-2xl font-black mt-1 text-gray-900 dark:text-white">{value}</p>
+      <p className="text-[10px] text-gray-400 mt-2">{sub}</p>
+    </div>
+  );
+};
+
+const SidebarLink = ({ active, onClick, icon, label, collapsed }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${active
+      ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800/50 shadow-md hover:shadow-lg"
+      : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 hover:shadow-sm"
+      } ${collapsed ? 'justify-center' : ''}`}
+  >
+    {icon}
+    {!collapsed && <span className="text-sm font-bold">{label}</span>}
+  </button>
+);
+
+const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
+  console.log("LearningPage rendering, user:", user);
+  const [activeTab, setActiveTab] = useState("chat");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [aiConfig, setAiConfig] = useState({
+    tone: "balanced", // 'creative', 'balanced', 'precise'
+    mode: "tutor", // 'tutor', 'summarizer', 'examiner'
+    personality: "friendly", // 'friendly', 'professional', 'rigorous'
+  });
   const [messages, setMessages] = useState([
     {
       id: Date.now(),
@@ -29,6 +66,7 @@ const LearningPage = ({ setShowLearningPage }) => {
   ]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [files, setFiles] = useState([]);
   const [lastDocSummary, setLastDocSummary] = useState("");
   const [useFileContext, setUseFileContext] = useState(false);
@@ -135,12 +173,13 @@ const LearningPage = ({ setShowLearningPage }) => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    const messageText = inputText.trim();
+    if (!messageText || isLoading) return;
 
     const userMessage = {
       id: Date.now(),
       sender: "user",
-      text: inputText,
+      text: messageText,
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
@@ -186,7 +225,7 @@ const LearningPage = ({ setShowLearningPage }) => {
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file || isLoading) return;
 
     setFiles((prev) => [...prev, file]);
     setMessages((prev) => [
@@ -194,7 +233,7 @@ const LearningPage = ({ setShowLearningPage }) => {
       {
         id: Date.now(),
         sender: "user",
-        text: `Uploaded: ${file.name}`,
+        text: `📎 **File uploaded:** ${file.name}`,
         timestamp: new Date(),
       },
     ]);
@@ -242,12 +281,15 @@ const LearningPage = ({ setShowLearningPage }) => {
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now(),
+          id: Date.now() + 1,
           sender: "ai",
           text: "Sorry, I couldn't process your file. Please try again.",
           timestamp: new Date(),
         },
       ]);
+    } finally {
+      setIsLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
     setIsLoading(false);
     setShowAnimation(false);
@@ -659,7 +701,7 @@ const LearningPage = ({ setShowLearningPage }) => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
