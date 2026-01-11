@@ -381,7 +381,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
                   {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
-                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-96 bg-white dark:bg-gray-800 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                       <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <div className="relative w-12 h-12 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
                           {false ? (

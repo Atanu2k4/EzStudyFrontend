@@ -5,15 +5,66 @@ const Legal = ({ type, onClose }) => {
     const content = {
         terms: {
             title: "Terms & Conditions",
-            content: <div className="space-y-6"></div>
+            content: (
+                <div className="space-y-6">
+                    <section className="bg-blue-50/30 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100/50 dark:border-blue-900/20 group hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+                        <div className="flex items-center space-x-3 mb-2">
+                            <Handshake size={20} className="text-blue-600 dark:text-blue-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
+                            <h3 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-['Merriweather']">Agreement to Terms</h3>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-['Inter']">By accessing or using <span className="text-blue-600 dark:text-blue-400 font-semibold">EzStudy</span>, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you do not agree, please do not use our services.</p>
+                    </section>
+                    <section className="bg-purple-50/30 dark:bg-purple-900/10 p-4 rounded-2xl border border-purple-100/50 dark:border-purple-900/20 group hover:border-purple-300 dark:hover:border-purple-700 transition-colors">
+                        <div className="flex items-center space-x-3 mb-2">
+                            <Bot size={20} className="text-purple-600 dark:text-purple-400 group-hover:scale-110 group-hover:animate-pulse transition-all duration-300" />
+                            <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-['Poppins']">Description of Service</h3>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-['Inter']">EzStudy provides <span className="text-purple-600 dark:text-purple-400 font-medium">AI-powered learning tools</span>, including chat-based tutoring, file analysis, and personalized study aids. We use advanced AI models to provide these services.</p>
+                    </section>
+                </div>
+            )
         },
         privacy: {
             title: "Privacy Policy",
-            content: <div className="space-y-6"></div>
+            content: (
+                <div className="space-y-6">
+                    <section className="bg-emerald-50/30 dark:bg-emerald-900/10 p-4 rounded-2xl border border-emerald-100/50 dark:border-emerald-900/20 group hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors">
+                        <div className="flex items-center space-x-3 mb-2">
+                            <Database size={20} className="text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
+                            <h3 className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent font-['Rubik']">Information We Collect</h3>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-['Inter']">We collect information you provide directly, such as when you create an account, upload documents for analysis, or interact with our <span className="text-emerald-600 dark:text-emerald-400 font-medium">AI assistant</span>.</p>
+                    </section>
+                    <section className="bg-cyan-50/30 dark:bg-cyan-900/10 p-4 rounded-2xl border border-cyan-100/50 dark:border-cyan-900/20 group hover:border-cyan-300 dark:hover:border-cyan-700 transition-colors">
+                        <div className="flex items-center space-x-3 mb-2">
+                            <Eye size={20} className="text-cyan-600 dark:text-cyan-400 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300" />
+                            <h3 className="text-lg font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent font-['Poppins']">How We Use Your Information</h3>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-['Inter']">Your data is used to provide and improve our AI services, <span className="text-cyan-600 dark:text-cyan-400 font-medium">personalize your experience</span>, and maintain platform security.</p>
+                    </section>
+                </div>
+            )
         },
         services: {
             title: "Terms of Service",
-            content: <div className="space-y-6"></div>
+            content: (
+                <div className="space-y-6">
+                    <section className="bg-amber-50/30 dark:bg-amber-900/10 p-4 rounded-2xl border border-amber-100/50 dark:border-amber-900/20 group hover:border-amber-300 dark:hover:border-amber-700 transition-colors">
+                        <div className="flex items-center space-x-3 mb-2">
+                            <CreditCard size={20} className="text-amber-600 dark:text-amber-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
+                            <h3 className="text-lg font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent font-['Playfair_Display']">Subscription and Access</h3>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-['Inter']">Access to certain features may require a subscription. We reserve the right to modify our <span className="text-amber-600 dark:text-amber-400 font-medium">pricing and availability</span>.</p>
+                    </section>
+                    <section className="bg-orange-50/30 dark:bg-orange-900/10 p-4 rounded-2xl border border-orange-100/50 dark:border-orange-900/20 group hover:border-orange-300 dark:hover:border-orange-700 transition-colors">
+                        <div className="flex items-center space-x-3 mb-2">
+                            <Activity size={20} className="text-orange-600 dark:text-orange-400 group-hover:scale-110 group-hover:animate-pulse transition-all duration-300" />
+                            <h3 className="text-lg font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent font-['Poppins']">AI Usage Limits</h3>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-['Inter']">To ensure <span className="text-orange-600 dark:text-orange-400 font-medium\">fair usage</span>, we may implement rate limits or quotas on AI interactions and file uploads.</p>
+                    </section>
+                </div>
+            )
         }
     };
 
