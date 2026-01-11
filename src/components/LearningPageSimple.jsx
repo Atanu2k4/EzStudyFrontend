@@ -144,7 +144,7 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
         } catch (error) {
             console.error("Chat API Error:", error);
             let errorMessage = "Failed to connect to the server. Please try again.";
-            
+
             if (error.message.includes("fetch")) {
                 errorMessage = "Network error: Unable to reach the server. Check your internet connection.";
             } else if (error.message.includes("CORS")) {
@@ -152,7 +152,7 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
             } else if (error.message) {
                 errorMessage = `Server error: ${error.message}`;
             }
-            
+
             setMessages((prev) => [
                 ...prev,
                 {
