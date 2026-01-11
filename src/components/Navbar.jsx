@@ -204,38 +204,45 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
   const uploadCroppedImage = async (file) => {
     setIsUploadingImage(true);
-    setIsCroppingImage(false);
 
     try {
-      const formData = new FormData();
-      formData.append('profileImage', file);
+      // STATIC IMPLEMENTATION: Convert file to Base64 and save locally
+      const reader = new FileReader();
 
-      console.log('Sending cropped image upload request...');
+      reader.onloadend = () => {
+        try {
+          const base64String = reader.result;
+          console.log('Image converted to Base64, length:', base64String.length);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/upload-profile-image`, {
-        method: 'POST',
-        body: formData,
-      });
+          // Update user with new image
+          const updatedUser = { ...user, profileImage: base64String };
+          localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
+          setUser(updatedUser);
 
-      console.log('Crop upload response status:', response.status);
+          console.log('Profile image updated successfully');
+          setIsUploadingImage(false);
+          setIsCroppingImage(false);
+          setCropImageSrc(null);
+        } catch (error) {
+          console.error('Error processing image:', error);
+          alert('Failed to process image');
+          setIsUploadingImage(false);
+        }
+      };
 
-      const data = await response.json();
-      console.log('Crop upload response data:', data);
+      reader.onerror = () => {
+        console.error('FileReader error');
+        alert('Failed to read image file');
+        setIsUploadingImage(false);
+      };
 
-      if (data.success) {
-        const updatedUser = { ...user, profileImage: data.imageUrl };
-        localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
-        setUser(updatedUser);
-        console.log('Cropped image updated successfully');
-      } else {
-        alert('Failed to upload cropped image: ' + data.error);
-      }
+      reader.readAsDataURL(file);
+
     } catch (error) {
-      console.error('Crop upload error:', error);
-      alert('Failed to upload cropped image. Please try again.');
-    } finally {
+      console.error('Upload error:', error);
+      alert('Failed to upload image: ' + error.message);
       setIsUploadingImage(false);
-      setCropImageSrc(null);
+      setIsCroppingImage(false);
     }
   };
 
@@ -244,7 +251,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       <div className={`fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3 w-[95%] sm:w-[90%] max-w-6xl z-50 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
         <nav className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-3xl rounded-full px-3 sm:px-8 py-3 sm:py-4 flex items-center justify-between flex-1 font-[Rubik]">
           {/* Logo */}
-          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow-sm hover:scale-105 transition-transform cursor-default font-['Playfair_Display']">
+          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow hover:scale-105 transition-transform cursor-default font-['Cambria_Math']">
             EzStudy
           </div>
 
@@ -309,15 +316,15 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                         setIsMobileMenuOpen(false);
                         onLoginClick();
                       }}
-                      className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium text-center shadow-md active:scale-95 transition-all font-['Inter']"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium text-center shadow-md active:scale-95 transition-all font-['Cambria_Math']"
                     >
                       Login
                     </button>
                   ) : (
                     <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                       <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-200">
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
-                          {user.profileImage ? (
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden group">
+                          {false ? (
                             <img
                               src={user.profileImage}
                               alt="Profile"
@@ -328,11 +335,12 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                               {user.name?.charAt(0) || user.email?.charAt(0)}
                             </div>
                           )}
+                          {/* Upload Disabled
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Camera size={12} className="text-white" />
-                          </div>
+                          </div> */}
                         </div>
-                        <span className="text-sm font-medium truncate max-w-[120px]">{user.name || user.email}</span>
+                        <span className="text-xs font-medium truncate max-w-[120px]">{user.name || user.email}</span>
                       </div>
                       <button
                         onClick={() => {
@@ -356,10 +364,10 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex flex-col items-end">
-                  <span className="text-xs font-bold text-gray-900 dark:text-gray-100 font-['Inter']">{user.name || 'User'}</span>
+                  <span className="text-[10px] font-bold text-gray-900 dark:text-gray-100 font-['Cambria_Math']">{user.name || 'User'}</span>
                   <button
                     onClick={onLogout}
-                    className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-all duration-300 hover:scale-110 active:scale-95 font-['Inter']"
+                    className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-all duration-300 hover:scale-110 active:scale-95 font-['Cambria_Math']"
                   >
                     Logout
                   </button>
@@ -369,23 +377,25 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                     onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                     className="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:scale-110 active:scale-95"
                   >
-                    {user.profileImage ? (
+                    {false ? (
                       <img
                         src={user.profileImage}
                         alt="Profile"
                         className="w-full h-full object-cover rounded-full"
                       />
                     ) : (
-                      <User size={20} className="text-gray-600 dark:text-gray-300 group-hover:scale-110 transition-transform" />
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                        {user.name?.charAt(0) || user.email?.charAt(0)}
+                      </div>
                     )}
                   </button>
 
                   {/* Profile Dropdown */}
                   {isProfileDropdownOpen && (
-                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                       <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
-                          {user.profileImage ? (
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden">
+                          {false ? (
                             <img
                               src={user.profileImage}
                               alt="Profile"
@@ -396,15 +406,12 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                               {user.name?.charAt(0) || user.email?.charAt(0)}
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Camera size={16} className="text-white" />
-                          </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
+                          <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Cambria_Math']">
                             {user.name || 'User'}
                           </h3>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate font-['Inter']">
+                          <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Cambria_Math']">
                             {user.email}
                           </p>
                         </div>
@@ -419,41 +426,22 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                         className="hidden"
                       />
 
-                      {/* Upload button */}
-                      <div className="mb-3">
-                        <button
-                          onClick={handleImageClick}
-                          disabled={isUploadingImage}
-                          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-md disabled:hover:scale-100"
-                        >
-                          {isUploadingImage ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                              <span className="text-sm font-medium font-['Inter']">Uploading...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Upload size={16} />
-                              <span className="text-sm font-medium font-['Inter']">Change Profile Picture</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
+
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Inter']">Account Type</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Inter']">Free</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Cambria_Math']">Account Type</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Cambria_Math']">Free</span>
                         </div>
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Inter']">Joined</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Inter']">
+                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Cambria_Math']">Joined</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Cambria_Math']">
                             {new Date(user.createdAt || Date.now()).toLocaleDateString()}
                           </span>
                         </div>
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Inter']">AI Interactions</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Inter']">∞</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Cambria_Math']">AI Interactions</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Cambria_Math']">∞</span>
                         </div>
                       </div>
 
@@ -466,7 +454,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                           className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                         >
                           <LogOut size={16} />
-                          <span className="text-sm font-medium font-['Inter']">Logout</span>
+                          <span className="text-sm font-medium font-['Cambria_Math']">Logout</span>
                         </button>
                       </div>
                     </div>
@@ -476,7 +464,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
             ) : (
               <button
                 onClick={onLoginClick}
-                className="px-8 py-2.5 bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all duration-300 font-['Inter']"
+                className="px-8 py-2.5 bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all duration-300 font-['Cambria_Math']"
               >
                 Login
               </button>
@@ -484,84 +472,29 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
           </div>
         </nav>
 
-        {/* Ultra Mind-Blowing Interactive Theme Toggle */}
-        <button
-          onClick={toggleDarkMode}
-          className="relative w-11 h-11 rounded-full overflow-hidden transition-all duration-300 group active:scale-75 hover:scale-125"
-          aria-label="Toggle Theme"
-          style={{
-            background: darkMode
-              ? 'radial-gradient(circle at 30% 30%, rgba(59,130,246,0.3), transparent 60%), radial-gradient(circle at 70% 70%, rgba(99,102,241,0.2), transparent 60%)'
-              : 'radial-gradient(circle at 30% 30%, rgba(251,191,36,0.3), transparent 60%), radial-gradient(circle at 70% 70%, rgba(249,115,22,0.2), transparent 60%)',
-            boxShadow: darkMode
-              ? '0 0 30px rgba(59,130,246,0.6), inset 0 0 20px rgba(59,130,246,0.2), 0 0 60px rgba(59,130,246,0.15)'
-              : '0 0 30px rgba(251,191,36,0.6), inset 0 0 20px rgba(251,191,36,0.2), 0 0 60px rgba(251,191,36,0.15)',
-          }}
-        >
-          {/* Quantum Particles */}
-          <div className="absolute inset-0 overflow-hidden rounded-full">
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                className={`absolute w-0.5 h-0.5 rounded-full ${darkMode ? 'bg-blue-300' : 'bg-yellow-300'} animate-pulse`}
-                style={{
-                  left: `${50 + Math.sin((i * 30) * Math.PI / 180) * 35}%`,
-                  top: `${50 + Math.cos((i * 30) * Math.PI / 180) * 35}%`,
-                  animationDelay: `${i * 50}ms`,
-                  boxShadow: darkMode ? '0 0 10px rgba(59,130,246,0.8)' : '0 0 10px rgba(251,191,36,0.8)',
-                  animation: `pulse ${1.5 + i * 0.1}s ease-in-out infinite`,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Rotating Rings */}
-          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div
-              className={`absolute inset-1 rounded-full border ${darkMode ? 'border-blue-400/60' : 'border-yellow-400/60'} animate-spin`}
-              style={{ animationDuration: '3s' }}
-            />
-            <div
-              className={`absolute inset-3 rounded-full border-2 ${darkMode ? 'border-indigo-400/40' : 'border-orange-400/40'} animate-spin`}
-              style={{ animationDuration: '5s', animationDirection: 'reverse' }}
-            />
-          </div>
-
-          {/* Icons Container */}
-          <div className="relative w-full h-full flex items-center justify-center">
-            {/* Sun */}
-            <Sun
-              className={`w-5 h-5 absolute transition-all duration-500 text-yellow-500 drop-shadow-lg ${darkMode ? 'opacity-0 scale-0 rotate-360' : 'opacity-100 scale-100 rotate-0'
-                }`}
-              style={{
-                filter: `drop-shadow(0 0 8px ${darkMode ? 'rgba(59,130,246,0)' : 'rgba(251,191,36,0.6)'})`
-              }}
-            />
-            {/* Moon */}
-            <Moon
-              className={`w-5 h-5 absolute transition-all duration-500 text-blue-400 drop-shadow-lg ${darkMode ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 rotate-360'
-                }`}
-              style={{
-                filter: `drop-shadow(0 0 8px ${darkMode ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0)'})`
-              }}
-            />
-          </div>
-
-          {/* Pulsing Aura */}
-          <div
-            className={`absolute -inset-3 rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-300 -z-10 blur-xl ${darkMode ? 'bg-blue-500' : 'bg-yellow-400'
-              } animate-pulse`}
-            style={{ animationDuration: '2s' }}
+        {/* New Day/Night Toggle from Uiverse.io */}
+        <div className="theme-toggle-wrapper">
+          <input
+            className="input"
+            id="dn"
+            type="checkbox"
+            checked={darkMode}
+            onChange={toggleDarkMode}
           />
-
-          {/* Shimmer Wave on Interaction */}
-          <div
-            className="absolute inset-0 rounded-full opacity-0 group-active:opacity-50 transition-opacity duration-100 group-active:animate-ping"
-            style={{
-              background: `conic-gradient(from 0deg, ${darkMode ? 'rgba(59,130,246,0.8)' : 'rgba(251,191,36,0.8)'}, transparent 70%)`
-            }}
-          />
-        </button>
+          <label className="toggle" htmlFor="dn">
+            <span className="toggle__handler">
+              <span className="crater crater--1"></span>
+              <span className="crater crater--2"></span>
+              <span className="crater crater--3"></span>
+            </span>
+            <span className="star star--1"></span>
+            <span className="star star--2"></span>
+            <span className="star star--3"></span>
+            <span className="star star--4"></span>
+            <span className="star star--5"></span>
+            <span className="star star--6"></span>
+          </label>
+        </div>
       </div>
 
       {/* Image Cropping Modal - Centered on Whole Page */}
@@ -569,7 +502,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto" onMouseMove={handleCropMouseMove} onMouseUp={handleCropMouseUp} onMouseLeave={handleCropMouseUp}>
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 my-auto transform scale-100 animate-in fade-in zoom-in-95 duration-300 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text text-center flex-1 font-['Poppins']">Crop Profile Picture</h3>
+              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text text-center flex-1 font-['Cambria_Math']">Crop Profile Picture</h3>
               <button
                 onClick={() => {
                   setIsCroppingImage(false);
@@ -637,7 +570,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center font-medium font-['Inter']">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center font-medium font-['Cambria_Math']">
                 Drag to move • Use corner/edge handles to resize • Yellow border = extends beyond image
               </p>
             </div>
@@ -688,7 +621,7 @@ const NavItem = ({ icon, text, href, onClick }) => {
     <a
       href={href}
       onClick={onClick}
-      className="flex items-center space-x-2 cursor-pointer text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 group transition-all duration-300 font-['Inter']"
+      className="flex items-center space-x-2 cursor-pointer text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 group transition-all duration-300 font-['Cambria_Math']"
     >
       <span className="p-1.5 rounded-xl bg-gray-100/80 dark:bg-gray-700/80 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-lg group-hover:shadow-purple-500/20 transition-all duration-300 shadow-sm group-hover:bg-gradient-to-br group-hover:from-purple-100 group-hover:to-blue-100 dark:group-hover:from-purple-900/50 dark:group-hover:to-blue-900/50">
         {icon}

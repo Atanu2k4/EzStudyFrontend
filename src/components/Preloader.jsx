@@ -11,8 +11,8 @@ const Preloader = () => {
     }, []);
 
     return (
-        <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-gray-900 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 scale-110 pointer-events-none'}`}>
-            <div className="relative w-96 h-96 flex items-center justify-center">
+        <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-gray-900 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 scale-110 pointer-events-none'} p-4`}>
+            <div className="relative w-full max-w-[500px] aspect-square flex items-center justify-center">
                 {/* Glowing background effect */}
                 <div className="absolute inset-0 bg-blue-500 opacity-20 blur-3xl rounded-full animate-pulse"></div>
 
@@ -20,17 +20,17 @@ const Preloader = () => {
                     src="https://lottie.host/940d982d-7f6f-4100-b740-e874954cea02/HIYUCWcoQJ.lottie"
                     loop
                     autoplay
-                    style={{ width: '384px', height: '384px' }}
+                    style={{ width: '100%', height: '100%' }}
                     className="relative z-10"
                 />
             </div>
 
             {/* Loading Text */}
             <div className="mt-8 text-center space-y-2">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text animate-pulse font-['Playfair_Display']">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text animate-pulse font-['Cambria_Math']">
                     EzStudy
                 </h2>
-                <p className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase font-['Inter']">
+                <p className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase font-['Cambria_Math']">
                     Opening Your Bookshelf...
                 </p>
             </div>

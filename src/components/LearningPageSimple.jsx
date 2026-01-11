@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bot, Home, LogOut, Upload, X, Send, FileText, Image, Play, Loader, Copy, Check } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
     const [messages, setMessages] = useState([
@@ -225,7 +227,7 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
             <main className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
                 <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-6 shadow-sm">
-                    <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Poppins']">
+                    <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Cambria_Math']">
                         AI Learning Console
                     </h2>
                     <button
@@ -268,9 +270,9 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
                                             <Copy size={14} />
                                         )}
                                     </button>
-                                    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words pr-8">
-                                        {msg.text}
-                                    </p>
+                                    <div className="text-sm leading-relaxed whitespace-pre-wrap break-words pr-8">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
+                                    </div>
                                     <p
                                         className={`text-xs mt-2 opacity-60 ${msg.sender === "user" ? "text-right" : "text-left"
                                             }`}
