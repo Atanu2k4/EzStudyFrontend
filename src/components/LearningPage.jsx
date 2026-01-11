@@ -728,7 +728,39 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     <X size={16} className="animated-cross text-gray-500 dark:text-gray-200" />
                   </button>
                 </div>
-                <div className="px-2">
+                <div className="px-4 pb-3">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Profile</h3>
+                    <button
+                      onClick={() => setIsProfileOpen(false)}
+                      className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+                      aria-label="Close profile"
+                    >
+                      <X size={14} className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-xs font-bold text-gray-900 dark:text-white">{user?.name || user?.username || "Guest"}</p>
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400">{user?.email || "No email"}</p>
+                    </div>
+                    <div className="space-y-1 pt-2 border-t border-gray-100 dark:border-gray-700">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Account Type</span>
+                        <span className="text-[10px] font-medium text-gray-900 dark:text-white">Free</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Joined</span>
+                        <span className="text-[10px] font-medium text-gray-900 dark:text-white">1/11/2026</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">AI Interactions</span>
+                        <span className="text-[10px] font-medium text-gray-900 dark:text-white">∞</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="px-2 pb-2">
                   <button
                     onClick={onLogout}
                     className="w-full flex items-center space-x-2 px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors rounded-lg"
