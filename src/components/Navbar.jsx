@@ -356,7 +356,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                             <Camera size={12} className="text-white" />
                           </div> */}
                         </div>
-                        <span className="text-sm font-medium truncate max-w-[120px]">{user.name || user.email}</span>
+                        <span className="text-xs font-medium truncate max-w-[120px]">{user.name || user.email}</span>
                       </div>
                       <button
                         onClick={() => {
@@ -380,7 +380,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex flex-col items-end">
-                  <span className="text-xs font-bold text-gray-900 dark:text-gray-100 font-['Inter']">{user.name || 'User'}</span>
+                  <span className="text-[10px] font-bold text-gray-900 dark:text-gray-100 font-['Inter']">{user.name || 'User'}</span>
                   <button
                     onClick={onLogout}
                     className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-all duration-300 hover:scale-110 active:scale-95 font-['Inter']"
@@ -428,10 +428,10 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                           </div> */}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
+                          <h3 className="text-xs font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
                             {user.name || 'User'}
                           </h3>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate font-['Inter']">
+                          <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Inter']">
                             {user.email}
                           </p>
                         </div>
