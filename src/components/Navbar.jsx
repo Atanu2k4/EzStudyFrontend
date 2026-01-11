@@ -210,7 +210,8 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       const formData = new FormData();
       formData.append('profileImage', file);
 
-      console.log('Sending cropped image upload request...');
+      console.log('Sending cropped image upload request to:', `${import.meta.env.VITE_BACKEND_URL}/api/upload-profile-image`);
+      console.log('File to upload:', file);
 
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/upload-profile-image`, {
         method: 'POST',
@@ -218,21 +219,43 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       });
 
       console.log('Crop upload response status:', response.status);
+      console.log('Crop upload response headers:', Object.fromEntries(response.headers.entries()));
 
-      const data = await response.json();
-      console.log('Crop upload response data:', data);
+      let data;
+      try {
+        data = await response.json();
+        console.log('Crop upload response data:', data);
+      } catch (jsonError) {
+        console.error('Failed to parse JSON response:', jsonError);
+        const textResponse = await response.text();
+        console.error('Raw response text:', textResponse);
+        throw new Error('Invalid response format from server');
+      }
 
       if (data.success) {
+        console.log('Upload successful, image URL:', data.imageUrl);
         const updatedUser = { ...user, profileImage: data.imageUrl };
         localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
         setUser(updatedUser);
         console.log('Cropped image updated successfully');
       } else {
-        alert('Failed to upload cropped image: ' + data.error);
+        console.error('Upload failed with error:', data.error);
+        alert('Failed to upload cropped image: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
-      console.error('Crop upload error:', error);
-      alert('Failed to upload cropped image. Please try again.');
+      console.error('Crop upload error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      
+      if (error.message.includes('fetch')) {
+        alert('Network error: Unable to connect to server. Check your internet connection.');
+      } else if (error.message.includes('CORS')) {
+        alert('Connection blocked: CORS policy prevents the request.');
+      } else {
+        alert('Failed to upload cropped image: ' + error.message);
+      }
     } finally {
       setIsUploadingImage(false);
       setCropImageSrc(null);
