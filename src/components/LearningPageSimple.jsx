@@ -225,7 +225,7 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
             <main className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
                 <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-6 shadow-sm">
-                    <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Poppins']">
+                    <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Cambria_Math']">
                         AI Learning Console
                     </h2>
                     <button

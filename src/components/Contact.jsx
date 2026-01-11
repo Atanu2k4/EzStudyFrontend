@@ -42,10 +42,10 @@ export default function Contact({ setActiveLegal }) {
 
       {/* Contact Form */}
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Merriweather']">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 font-['Cambria_Math']">
           Get in Touch
         </h2>
-        <p className="mt-2 sm:mt-3 text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400 font-['Inter']">
+        <p className="mt-2 sm:mt-3 text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-400 font-['Cambria_Math']">
           Have questions? Feel free to reach out to us, and we’ll respond as
           soon as possible.
         </p>
@@ -58,7 +58,7 @@ export default function Contact({ setActiveLegal }) {
         {/* Name Fields */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div className="group">
-            <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
+            <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Cambria_Math']">
               First Name
             </label>
             <input
@@ -69,7 +69,7 @@ export default function Contact({ setActiveLegal }) {
             />
           </div>
           <div className="group">
-            <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
+            <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Cambria_Math']">
               Last Name
             </label>
             <input
@@ -83,7 +83,7 @@ export default function Contact({ setActiveLegal }) {
 
         {/* Email */}
         <div className="group">
-          <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
+          <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Cambria_Math']">
             Email
           </label>
           <input
@@ -96,7 +96,7 @@ export default function Contact({ setActiveLegal }) {
 
         {/* Message */}
         <div className="group">
-          <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Inter']">
+          <label className="block text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-200 transition-colors group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 font-['Cambria_Math']">
             Message
           </label>
           <textarea
@@ -120,12 +120,12 @@ export default function Contact({ setActiveLegal }) {
                 }`}
             />
           </Switch>
-          <Label className="text-sm text-gray-600 dark:text-gray-400 font-['Inter']">
+          <Label className="text-sm text-gray-600 dark:text-gray-400 font-['Cambria_Math']">
             I agree to the{" "}
             <button
               type="button"
               onClick={() => setActiveLegal('terms')}
-              className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300 cursor-pointer group font-['Inter']"
+              className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300 cursor-pointer group font-['Cambria_Math']"
             >
               terms & conditions.
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
@@ -137,7 +137,7 @@ export default function Contact({ setActiveLegal }) {
         <div className="pt-2">
           <button
             type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 dark:from-indigo-500 dark:to-blue-500 dark:hover:from-indigo-600 dark:hover:to-blue-600 px-4 py-3 text-lg font-bold text-white shadow-xl hover:shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 font-['Inter']"
+            className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 dark:from-indigo-500 dark:to-blue-500 dark:hover:from-indigo-600 dark:hover:to-blue-600 px-4 py-3 text-lg font-bold text-white shadow-xl hover:shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 font-['Cambria_Math']"
           >
             Send Message
           </button>

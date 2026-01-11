@@ -251,7 +251,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       <div className={`fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3 w-[95%] sm:w-[90%] max-w-6xl z-50 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
         <nav className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-3xl rounded-full px-3 sm:px-8 py-3 sm:py-4 flex items-center justify-between flex-1 font-[Rubik]">
           {/* Logo */}
-          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow hover:scale-105 transition-transform cursor-default font-['Playfair_Display']">
+          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow hover:scale-105 transition-transform cursor-default font-['Cambria_Math']">
             EzStudy
           </div>
 
@@ -316,7 +316,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                         setIsMobileMenuOpen(false);
                         onLoginClick();
                       }}
-                      className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium text-center shadow-md active:scale-95 transition-all font-['Inter']"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium text-center shadow-md active:scale-95 transition-all font-['Cambria_Math']"
                     >
                       Login
                     </button>
@@ -364,10 +364,10 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex flex-col items-end">
-                  <span className="text-[10px] font-bold text-gray-900 dark:text-gray-100 font-['Inter']">{user.name || 'User'}</span>
+                  <span className="text-[10px] font-bold text-gray-900 dark:text-gray-100 font-['Cambria_Math']">{user.name || 'User'}</span>
                   <button
                     onClick={onLogout}
-                    className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-all duration-300 hover:scale-110 active:scale-95 font-['Inter']"
+                    className="text-[10px] text-red-500 hover:text-red-400 font-bold uppercase tracking-wider transition-all duration-300 hover:scale-110 active:scale-95 font-['Cambria_Math']"
                   >
                     Logout
                   </button>
@@ -408,10 +408,10 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
+                          <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Cambria_Math']">
                             {user.name || 'User'}
                           </h3>
-                          <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Inter']">
+                          <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Cambria_Math']">
                             {user.email}
                           </p>
                         </div>
@@ -430,18 +430,18 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Inter']">Account Type</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Inter']">Free</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Cambria_Math']">Account Type</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Cambria_Math']">Free</span>
                         </div>
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Inter']">Joined</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Inter']">
+                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Cambria_Math']">Joined</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Cambria_Math']">
                             {new Date(user.createdAt || Date.now()).toLocaleDateString()}
                           </span>
                         </div>
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Inter']">AI Interactions</span>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Inter']">∞</span>
+                          <span className="text-sm text-gray-600 dark:text-gray-300 font-['Cambria_Math']">AI Interactions</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white font-['Cambria_Math']">∞</span>
                         </div>
                       </div>
 
@@ -454,7 +454,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                           className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                         >
                           <LogOut size={16} />
-                          <span className="text-sm font-medium font-['Inter']">Logout</span>
+                          <span className="text-sm font-medium font-['Cambria_Math']">Logout</span>
                         </button>
                       </div>
                     </div>
@@ -464,7 +464,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
             ) : (
               <button
                 onClick={onLoginClick}
-                className="px-8 py-2.5 bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all duration-300 font-['Inter']"
+                className="px-8 py-2.5 bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105 active:scale-95 transition-all duration-300 font-['Cambria_Math']"
               >
                 Login
               </button>
@@ -502,7 +502,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto" onMouseMove={handleCropMouseMove} onMouseUp={handleCropMouseUp} onMouseLeave={handleCropMouseUp}>
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 my-auto transform scale-100 animate-in fade-in zoom-in-95 duration-300 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text text-center flex-1 font-['Poppins']">Crop Profile Picture</h3>
+              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text text-center flex-1 font-['Cambria_Math']">Crop Profile Picture</h3>
               <button
                 onClick={() => {
                   setIsCroppingImage(false);
@@ -570,7 +570,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center font-medium font-['Inter']">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center font-medium font-['Cambria_Math']">
                 Drag to move • Use corner/edge handles to resize • Yellow border = extends beyond image
               </p>
             </div>
@@ -621,7 +621,7 @@ const NavItem = ({ icon, text, href, onClick }) => {
     <a
       href={href}
       onClick={onClick}
-      className="flex items-center space-x-2 cursor-pointer text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 group transition-all duration-300 font-['Inter']"
+      className="flex items-center space-x-2 cursor-pointer text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 group transition-all duration-300 font-['Cambria_Math']"
     >
       <span className="p-1.5 rounded-xl bg-gray-100/80 dark:bg-gray-700/80 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-lg group-hover:shadow-purple-500/20 transition-all duration-300 shadow-sm group-hover:bg-gradient-to-br group-hover:from-purple-100 group-hover:to-blue-100 dark:group-hover:from-purple-900/50 dark:group-hover:to-blue-900/50">
         {icon}

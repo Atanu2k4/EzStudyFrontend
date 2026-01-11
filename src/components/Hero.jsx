@@ -30,11 +30,11 @@ const Hero = ({ setShowLearningPage, onDemoClick, isReady, user, onLoginClick, o
 
       {/* Content */}
       <div className={`flex-1 space-y-4 sm:space-y-6 z-10 transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight max-w-2xl font-['Playfair_Display']">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight max-w-2xl font-['Cambria_Math']">
           <span className="text-gray-900 dark:text-white">Unlock </span>
           <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-red-500 text-transparent bg-clip-text">AI-Powered Learning</span>
         </h1>
-        <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-xl font-['Rubik'] font-medium">
+        <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-xl font-['Cambria_Math'] font-medium">
           Transform your study with AI insights, tailored plans & smart notes.
         </p>
         <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 pt-2 sm:pt-3">

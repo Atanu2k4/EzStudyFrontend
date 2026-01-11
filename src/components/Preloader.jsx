@@ -27,10 +27,10 @@ const Preloader = () => {
 
             {/* Loading Text */}
             <div className="mt-8 text-center space-y-2">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text animate-pulse font-['Playfair_Display']">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text animate-pulse font-['Cambria_Math']">
                     EzStudy
                 </h2>
-                <p className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase font-['Inter']">
+                <p className="text-gray-500 dark:text-gray-400 text-sm font-medium tracking-widest uppercase font-['Cambria_Math']">
                     Opening Your Bookshelf...
                 </p>
             </div>
