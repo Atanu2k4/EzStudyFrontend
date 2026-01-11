@@ -248,7 +248,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
         stack: error.stack,
         name: error.name
       });
-      
+
       if (error.message.includes('fetch')) {
         alert('Network error: Unable to connect to server. Check your internet connection.');
       } else if (error.message.includes('CORS')) {
