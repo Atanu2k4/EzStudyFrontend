@@ -718,14 +718,25 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             </button>
 
             {isProfileOpen && (
-              <div className="absolute bottom-full left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 animate-fadeIn">
-                <button
-                  onClick={onLogout}
-                  className="w-full flex items-center space-x-2 px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  <LogOut size={14} />
-                  <span>Sign out</span>
-                </button>
+              <div className="absolute bottom-full left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 animate-fadeIn will-change-transform-opacity">
+                <div className="flex items-center justify-end px-2 pt-2">
+                  <button
+                    onClick={() => setIsProfileOpen(false)}
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 will-change-transform"
+                    aria-label="Close profile"
+                  >
+                    <X size={16} className="animated-cross text-gray-500 dark:text-gray-200" />
+                  </button>
+                </div>
+                <div className="px-2">
+                  <button
+                    onClick={onLogout}
+                    className="w-full flex items-center space-x-2 px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors rounded-lg"
+                  >
+                    <LogOut size={14} />
+                    <span>Sign out</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
