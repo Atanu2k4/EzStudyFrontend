@@ -718,7 +718,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             </button>
 
             {isProfileOpen && (
-              <div className="absolute bottom-full left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 animate-fadeIn will-change-transform-opacity">
+              <div className="absolute top-0 left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-[100] animate-fadeIn will-change-transform-opacity">
                 <div className="flex items-center justify-end px-2 pt-2">
                   <button
                     onClick={() => setIsProfileOpen(false)}
