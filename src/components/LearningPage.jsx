@@ -100,6 +100,49 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
     background: "#f8fafc", // Light slate
   };
 
+  // Load chat history and messages from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedChatHistory = localStorage.getItem("chatHistory");
+      if (savedChatHistory) {
+        const restoredHistory = JSON.parse(savedChatHistory);
+        setChatHistory(restoredHistory);
+
+        // Find the last active chat or use the first one
+        const activeChatId = localStorage.getItem("activeChatId");
+        const chatToLoad =
+          restoredHistory.find((chat) => chat.id === activeChatId) ||
+          restoredHistory[0];
+
+        if (chatToLoad) {
+          setCurrentChatId(chatToLoad.id);
+          const chatMessages = loadChatMessages(chatToLoad.id);
+          setMessages(chatMessages);
+        }
+      }
+    } catch (error) {
+      console.error("Error restoring chat history:", error);
+    }
+  }, []);
+
+  // Save chat history to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+    } catch (error) {
+      console.error("Error saving chat history:", error);
+    }
+  }, [chatHistory]);
+
+  // Save active chat ID to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("activeChatId", currentChatId);
+    } catch (error) {
+      console.error("Error saving active chat ID:", error);
+    }
+  }, [currentChatId]);
+
   // Scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -585,12 +628,12 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                   } mb-4 animate-fadeIn`}
               >
                 <div
-                  className={`w-full sm:max-w-3xl p-4 rounded-xl shadow-sm text-base ${message.sender === "user"
+                  className={`w-full sm:max-w-3xl p-4 rounded-xl shadow-sm text-sm ${message.sender === "user"
                     ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
                     : "bg-white border border-gray-200"
                     } transform transition-all duration-300 hover:shadow-md`}
                 >
-                  <div className="prose max-w-none overflow-x-auto break-words">
+                  <div className="prose prose-sm max-w-none overflow-x-auto break-words">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {message.text}
                     </ReactMarkdown>
@@ -625,7 +668,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                       style={{ animationDelay: "600ms" }}
                     ></div>
                   </div>
-                  <p className="text-gray-500 text-sm">AI is thinking...</p>
+                  <p className="text-gray-500 text-xs">AI is thinking...</p>
                 </div>
               </div>
             )}
