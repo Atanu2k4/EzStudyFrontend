@@ -85,6 +85,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
   const [editingChatId, setEditingChatId] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [profileClosing, setProfileClosing] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [compactChat, setCompactChat] = useState(false);
 
@@ -313,6 +314,15 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
     return () => clearTimeout(timeoutId);
   }, [messages, currentChatId]);
+
+  // Handle closing profile with animation
+  const handleCloseProfile = () => {
+    setProfileClosing(true);
+    setTimeout(() => {
+      setIsProfileOpen(false);
+      setProfileClosing(false);
+    }, 200);
+  };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -718,51 +728,20 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             </button>
 
             {isProfileOpen && (
-              <div className="absolute top-0 left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-[100] animate-fadeIn will-change-transform-opacity">
-                <div className="flex items-center justify-end px-2 pt-2">
-                  <button
-                    onClick={() => setIsProfileOpen(false)}
-                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 will-change-transform"
-                    aria-label="Close profile"
-                  >
-                    <X size={16} className="animated-cross text-gray-500 dark:text-gray-200" />
-                  </button>
-                </div>
+              <div className={`absolute top-0 left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-[100] ${profileClosing ? 'animate-out fade-out scale-95 duration-200' : 'animate-in fade-in scale-100 duration-300'}`}>
+
                 <div className="px-4 pb-3">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="mb-3">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Profile</h3>
-                    <button
-                      onClick={() => setIsProfileOpen(false)}
-                      className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
-                      aria-label="Close profile"
-                    >
-                      <X size={14} className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
-                    </button>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <p className="text-xs font-bold text-gray-900 dark:text-white">{user?.name || user?.username || "Guest"}</p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400">{user?.email || "No email"}</p>
-                      </div>
-                      <button
-                        onClick={() => setIsProfileOpen(false)}
-                        className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ml-2"
-                        aria-label="Close profile"
-                      >
-                        <X size={14} className="animated-cross text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
-                      </button>
+                    <div>
+                      <p className="text-xs font-bold text-gray-900 dark:text-white">{user?.name || user?.username || "Guest"}</p>
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400">{user?.email || "No email"}</p>
                     </div>
                     <div className="space-y-1 pt-2 border-t border-gray-100 dark:border-gray-700">
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="mb-2">
                         <h4 className="text-xs font-semibold text-gray-900 dark:text-white">Account Details</h4>
-                        <button
-                          onClick={() => setIsProfileOpen(false)}
-                          className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
-                          aria-label="Close profile"
-                        >
-                          <X size={12} className="animated-cross text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
-                        </button>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-[10px] text-gray-500 dark:text-gray-400">Account Type</span>
@@ -779,7 +758,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     </div>
                     <div className="flex justify-center pt-3 border-t border-gray-100 dark:border-gray-700 mt-3">
                       <button
-                        onClick={() => setIsProfileOpen(false)}
+                        onClick={() => handleCloseProfile()}
                         className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                         aria-label="Close profile"
                       >
@@ -799,7 +778,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                       <span>Sign out</span>
                     </button>
                     <button
-                      onClick={() => setIsProfileOpen(false)}
+                      onClick={() => handleCloseProfile()}
                       className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ml-1"
                       aria-label="Close profile"
                     >
