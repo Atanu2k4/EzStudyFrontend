@@ -212,7 +212,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
       console.log('Sending cropped image upload request...');
 
-      const response = await fetch('http://localhost:3001/api/upload-profile-image', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/upload-profile-image`, {
         method: 'POST',
         body: formData,
       });
@@ -223,7 +223,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       console.log('Crop upload response data:', data);
 
       if (data.success) {
-        const updatedUser = { ...user, profileImage: `http://localhost:3001${data.imageUrl}` };
+        const updatedUser = { ...user, profileImage: `${import.meta.env.VITE_BACKEND_URL}${data.imageUrl}` };
         localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
         setUser(updatedUser);
         console.log('Cropped image updated successfully');
