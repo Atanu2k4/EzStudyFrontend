@@ -15,7 +15,7 @@ const Preloader = () => {
             <div className="relative w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] aspect-square flex items-center justify-center overflow-hidden">
                 {/* Circle glow effect */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-64 h-64 bg-gradient-to-r from-blue-400/20 via-purple-400/15 to-pink-400/10 rounded-full blur-xl animate-pulse"></div>
+                    <div className="w-64 h-64 bg-gradient-to-r from-blue-400/40 via-purple-400/35 to-pink-400/25 rounded-full blur-xl animate-pulse"></div>
                 </div>
 
                 <div className="relative z-10 w-full h-full">
