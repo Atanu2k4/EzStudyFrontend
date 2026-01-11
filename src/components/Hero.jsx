@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DotLottiePlayer } from '@dotlottie/react-player';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { ArrowRight, Zap, Clock, Target, Bot } from "lucide-react";
 
 const Hero = ({ setShowLearningPage, onDemoClick, isReady, user, onLoginClick, onSignupClick }) => {
@@ -90,7 +90,7 @@ const Hero = ({ setShowLearningPage, onDemoClick, isReady, user, onLoginClick, o
             </div>
 
             <div className="w-full h-32 overflow-hidden flex items-center justify-center">
-              <DotLottiePlayer
+              <DotLottieReact
                 src="https://lottie.host/940d982d-7f6f-4100-b740-e874954cea02/HIYUCWcoQJ.lottie"
                 loop
                 autoplay
@@ -99,7 +99,7 @@ const Hero = ({ setShowLearningPage, onDemoClick, isReady, user, onLoginClick, o
             </div>
             <div className="w-full h-px bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-800 dark:to-indigo-800 rounded-full my-2"></div>
             <div className="w-full h-32 overflow-hidden flex items-center justify-center">
-              <DotLottiePlayer
+              <DotLottieReact
                 src="https://lottie.host/a33024c3-2554-45d7-8959-ef10c82ccb96/Z2KJN74cgJ.lottie"
                 loop
                 autoplay
