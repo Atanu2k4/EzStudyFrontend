@@ -204,34 +204,45 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
   const uploadCroppedImage = async (file) => {
     setIsUploadingImage(true);
-    setIsCroppingImage(false);
 
     try {
       // STATIC IMPLEMENTATION: Convert file to Base64 and save locally
       const reader = new FileReader();
-      
+
       reader.onloadend = () => {
-        const base64String = reader.result;
-        
-        // Simulate a slight delay to look like an upload
-        setTimeout(() => {
-          console.log('Static upload successful');
+        try {
+          const base64String = reader.result;
+          console.log('Image converted to Base64, length:', base64String.length);
+
+          // Update user with new image
           const updatedUser = { ...user, profileImage: base64String };
           localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
           setUser(updatedUser);
-          
+
+          console.log('Profile image updated successfully');
           setIsUploadingImage(false);
+          setIsCroppingImage(false);
           setCropImageSrc(null);
-        }, 500);
+        } catch (error) {
+          console.error('Error processing image:', error);
+          alert('Failed to process image');
+          setIsUploadingImage(false);
+        }
       };
-      
+
+      reader.onerror = () => {
+        console.error('FileReader error');
+        alert('Failed to read image file');
+        setIsUploadingImage(false);
+      };
+
       reader.readAsDataURL(file);
 
     } catch (error) {
-      console.error('Static upload error:', error);
-      alert('Failed to process image');
+      console.error('Upload error:', error);
+      alert('Failed to upload image: ' + error.message);
       setIsUploadingImage(false);
-      setCropImageSrc(null);
+      setIsCroppingImage(false);
     }
   };
 
