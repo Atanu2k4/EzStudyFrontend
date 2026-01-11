@@ -740,9 +740,18 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     </button>
                   </div>
                   <div className="space-y-2">
-                    <div>
-                      <p className="text-xs font-bold text-gray-900 dark:text-white">{user?.name || user?.username || "Guest"}</p>
-                      <p className="text-[10px] text-gray-500 dark:text-gray-400">{user?.email || "No email"}</p>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <p className="text-xs font-bold text-gray-900 dark:text-white">{user?.name || user?.username || "Guest"}</p>
+                        <p className="text-[10px] text-gray-500 dark:text-gray-400">{user?.email || "No email"}</p>
+                      </div>
+                      <button
+                        onClick={() => setIsProfileOpen(false)}
+                        className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ml-2"
+                        aria-label="Close profile"
+                      >
+                        <X size={14} className="animated-cross text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
+                      </button>
                     </div>
                     <div className="space-y-1 pt-2 border-t border-gray-100 dark:border-gray-700">
                       <div className="flex justify-between items-center">
