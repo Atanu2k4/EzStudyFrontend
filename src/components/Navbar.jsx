@@ -223,7 +223,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       console.log('Crop upload response data:', data);
 
       if (data.success) {
-        const updatedUser = { ...user, profileImage: `${import.meta.env.VITE_BACKEND_URL}${data.imageUrl}` };
+        const updatedUser = { ...user, profileImage: data.imageUrl };
         localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
         setUser(updatedUser);
         console.log('Cropped image updated successfully');
