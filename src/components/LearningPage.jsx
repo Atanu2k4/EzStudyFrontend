@@ -27,7 +27,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 // Sub-components moved to top to avoid initialization errors
-  const StatCard = ({ label, value, sub, color }) => {
+const StatCard = ({ label, value, sub, color }) => {
   const colorMap = {
     blue: 'border-blue-100 bg-blue-50/30 text-blue-600',
     purple: 'border-purple-100 bg-purple-50/30 text-purple-600',
@@ -43,7 +43,7 @@ import remarkGfm from "remark-gfm";
   );
 };
 
-  const SidebarLink = ({ active, onClick, icon, label, collapsed }) => (
+const SidebarLink = ({ active, onClick, icon, label, collapsed }) => (
   <button
     onClick={onClick}
     className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-500 ease-in-out hover:scale-105 active:scale-95 ${active
@@ -571,7 +571,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
         : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-white"
         }`}
     >
-      <Icon size={18} className="transition-colors duration-200 group-hover:text-black dark:group-hover:text-black" />
+      <Icon size={18} className="transition-colors duration-400 ease-in-out group-hover:text-black dark:group-hover:text-black transform-gpu transition-transform duration-400 ease-in-out group-hover:scale-110 group-hover:-rotate-6" />
       <span className="font-semibold text-sm transition-colors duration-200 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">{label}</span>
     </button>
   );
@@ -658,7 +658,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     .map((chat) => (
                       <div
                         key={chat.id}
-                          className={`group relative rounded-lg border transition-all duration-400 ease-in-out ${chat.id === currentChatId
+                        className={`group relative rounded-lg border transition-all duration-400 ease-in-out ${chat.id === currentChatId
                           ? "bg-indigo-50/50 border-indigo-100"
                           : "bg-transparent border-transparent hover:bg-gray-50"
                           }`}
@@ -711,8 +711,8 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                 )}
               </div>
               <div className="flex-1 text-left min-w-0">
-                <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{user?.name || user?.username || "Guest"}</p>
-                <p className="text-[10px] text-gray-400 truncate">{user?.email || "No email"}</p>
+                <p className="text-xs font-bold text-gray-900 dark:text-black truncate">{user?.name || user?.username || "Guest"}</p>
+                <p className="text-[10px] text-gray-400 dark:text-black truncate">{user?.email || "No email"}</p>
               </div>
               <MoreVertical size={14} className="text-gray-400" />
             </button>
