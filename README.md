@@ -4,22 +4,27 @@
 EzStudy is an AI-powered learning platform that transforms the way students study and learn. Built with React and Express.js, it provides an intelligent learning console with AI-driven insights, personalized study plans, and smart document analysis capabilities.
 
 ## ✨ Features
-- **AI Learning Assistant**: Interactive chatbot powered by OpenAI for personalized learning support
+- **AI Learning Assistant**: Interactive chatbot powered by Groq API for personalized learning support
 - **Document Analysis**: Upload and analyze PDF, DOC, PPT files with AI-powered summarization
-- **Chat History Persistence**: Save and restore conversations across sessions
+- **Chat History Persistence**: Save and restore conversations across sessions (localStorage)
 - **User Authentication**: Secure login/signup with Clerk authentication
-- **Responsive Design**: Modern, mobile-friendly interface built with Tailwind CSS
-- **File Upload**: Support for multiple document formats with Cloudinary integration
+- **Responsive Design**: Modern, mobile-friendly interface built with Tailwind CSS with special optimizations for mobile
+- **Smooth Navigation**: Elegant 1.5-second smooth scroll animation when clicking EzStudy logo
+- **Gradient UI Effects**: Beautiful gradient color effects on EzStudy branding throughout the app
+- **Mobile-Optimized AI Console**: Enhanced chat input with mobile-friendly options menu (Upload, Library Context, Compact Chat)
+- **Cambria Math Typography**: Elegant serif fonts applied to key UI labels for premium feel
 - **Real-time Chat**: Interactive learning conversations with markdown support
+- **File Upload & Library**: Support for multiple document formats with local file management
 
 ## 🔧 Technologies Used
-- **Frontend**: React 19, Vite, Tailwind CSS, Lucide React icons
-- **Backend**: Node.js, Express.js, Multer for file uploads
-- **AI/ML**: OpenAI API, PDF parsing, OCR with Tesseract.js
+- **Frontend**: React (Functional Components), Vite, Tailwind CSS, Lucide React icons
+- **Routing**: React Router DOM for SPA navigation
+- **Backend Integration**: Express.js API integration with Groq AI
+- **AI/ML**: Groq API (Llama 3.3 70B model) for chat completions and document analysis
 - **Authentication**: Clerk for user management
-- **File Storage**: Cloudinary for document and image storage
-- **Charts**: Chart.js for data visualization
-- **Markdown**: React Markdown with GitHub Flavored Markdown support
+- **Markdown Rendering**: React Markdown with GitHub Flavored Markdown support
+- **Animations**: CSS animations (popOut, fadeIn, smooth scroll) and Tailwind transitions
+- **State Management**: React Hooks (useState, useEffect, useRef, useContext)
 
 ## 📦 Installation
 
@@ -76,6 +81,7 @@ We welcome contributions! Here's how you can contribute:
 4. Push your changes to your fork
 5. Submit a pull request
 
-## 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
+
+Built with ❤️ for the EzStudy learning platform. Updated as of January 12, 2026.
 
