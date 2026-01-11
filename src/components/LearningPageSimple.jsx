@@ -270,7 +270,7 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
                                 }}
                             >
                                 <div
-                                    className={`max-w-md p-4 rounded-2xl shadow-lg transition-all hover:shadow-xl transform hover:scale-105 relative group ${msg.sender === "user"
+                                    className={`w-full sm:max-w-3xl p-4 rounded-2xl shadow-lg transition-all hover:shadow-xl transform hover:scale-105 relative group text-base ${msg.sender === "user"
                                         ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-none"
                                         : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-bl-none border border-gray-200 dark:border-gray-700"
                                         }`}

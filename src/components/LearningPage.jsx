@@ -292,7 +292,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
     }
     setIsLoading(false);
     setShowAnimation(false);
-    fileInputRef.current.value = null;
+    if (fileInputRef.current) fileInputRef.current.value = null;
   };
 
   // Create a new chat session
@@ -585,9 +585,9 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                   } mb-4 animate-fadeIn`}
               >
                 <div
-                  className={`max-w-2xl p-4 rounded-xl shadow-sm ${message.sender === "user"
-                      ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
-                      : "bg-white border border-gray-200"
+                  className={`w-full sm:max-w-3xl p-4 rounded-xl shadow-sm text-base ${message.sender === "user"
+                    ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
+                    : "bg-white border border-gray-200"
                     } transform transition-all duration-300 hover:shadow-md`}
                 >
                   <div className="prose max-w-none overflow-x-auto break-words">
@@ -597,8 +597,8 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                   </div>
                   <div
                     className={`text-xs mt-2 opacity-70 ${message.sender === "user"
-                        ? "text-indigo-100"
-                        : "text-gray-500"
+                      ? "text-indigo-100"
+                      : "text-gray-500"
                       }`}
                   >
                     {formatTime(message.timestamp)}
@@ -695,7 +695,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
