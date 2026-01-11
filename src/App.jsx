@@ -6,7 +6,7 @@ import About from './components/About'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import Legal from './components/Legal'
-import LearningPageSimple from './components/LearningPageSimple'
+import LearningPage from './components/LearningPage'
 import Preloader from './components/Preloader'
 import AuthModal from './components/AuthModal'
 
@@ -123,7 +123,7 @@ function App() {
       {!isLoading && (
         <div>
           {showLearningPage ? (
-            <LearningPageSimple
+            <LearningPage
               setShowLearningPage={setShowLearningPage}
               user={user}
               onLogout={handleLogout}
