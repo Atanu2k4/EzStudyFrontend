@@ -701,7 +701,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="w-full flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-xl transition-colors"
+              className="group w-full flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-xl transition-colors"
             >
               <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold overflow-hidden shadow-sm">
                 {user?.profileImage ? (
@@ -711,8 +711,8 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                 )}
               </div>
               <div className="flex-1 text-left min-w-0">
-                <p className="text-xs font-bold text-gray-900 dark:text-black truncate">{user?.name || user?.username || "Guest"}</p>
-                <p className="text-[10px] text-gray-400 dark:text-black truncate">{user?.email || "No email"}</p>
+                <p className="text-xs font-bold text-gray-900 dark:text-white truncate group-hover:text-black dark:group-hover:text-black">{user?.name || user?.username || "Guest"}</p>
+                <p className="text-[10px] text-gray-400 dark:text-white truncate group-hover:text-black dark:group-hover:text-black">{user?.email || "No email"}</p>
               </div>
               <MoreVertical size={14} className="text-gray-400" />
             </button>
