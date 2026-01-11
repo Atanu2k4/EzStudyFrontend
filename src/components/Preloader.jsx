@@ -25,7 +25,6 @@ const Preloader = () => {
                 />
             </div>
         </div>
-            </div>
 
             {/* Loading Text */}
             <div className="mt-8 text-center space-y-2">
