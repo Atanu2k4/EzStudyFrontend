@@ -19,8 +19,9 @@ const Preloader = () => {
                     loop
                     autoplay
                     className="w-full h-full object-contain drop-shadow-2xl"
-                </div>
+                />
             </div>
+        </div>
 
             {/* Loading Text */}
             <div className="mt-8 text-center space-y-2">
