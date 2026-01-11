@@ -13,6 +13,9 @@ const Preloader = () => {
     return (
         <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-gray-900 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 scale-110 pointer-events-none'} p-4`}>
             <div className="relative w-full max-w-[300px] sm:max-w-[400px] md:max-w-[500px] aspect-square flex items-center justify-center overflow-hidden">
+            {/* Round glowing background effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/15 via-purple-400/10 to-pink-400/5 rounded-full blur-2xl animate-pulse"></div>
+
             <div className="relative z-10 w-full h-full">
                 <DotLottieReact
                     src="https://lottie.host/940d982d-7f6f-4100-b740-e874954cea02/HIYUCWcoQJ.lottie"
@@ -22,6 +25,7 @@ const Preloader = () => {
                 />
             </div>
         </div>
+            </div>
 
             {/* Loading Text */}
             <div className="mt-8 text-center space-y-2">
