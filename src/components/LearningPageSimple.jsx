@@ -203,7 +203,7 @@ const LearningPageSimple = ({ setShowLearningPage, user, onLogout }) => {
             >
                 <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
                     {isSidebarOpen && (
-                        <span className="font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text">
+                        <span className="font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text font-['Cambria_Math']">
                             EzStudy AI
                         </span>
                     )}

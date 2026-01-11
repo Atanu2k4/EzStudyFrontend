@@ -5,24 +5,20 @@ import {
   Send,
   BookOpen,
   FileText,
-  CheckCircle,
-  Clock,
   Menu,
   X,
   Plus,
   MessageSquare,
   Trash2,
-  Search,
-  Edit3,
   MoreVertical,
   LogOut,
   User,
   Layout,
   Library,
-  Settings,
   Copy,
   Check,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -56,8 +52,8 @@ const SidebarLink = ({ active, onClick, icon, label, collapsed }) => (
   </button>
 );
 
-const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
-  console.log("LearningPage rendering, user:", user);
+const LearningPage = ({ user, onLogout }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("chat"); // 'chat', 'docs', 'stats'
 
   // Use user-specific keys for localStorage to ensure separation
@@ -74,7 +70,6 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [files, setFiles] = useState([]);
   const [storedFiles, setStoredFiles] = useState([]); // persisted per-user metadata
   const [lastDocSummary, setLastDocSummary] = useState("");
@@ -82,12 +77,11 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
   const [showAnimation, setShowAnimation] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [editingChatId, setEditingChatId] = useState(null);
-  const [editingTitle, setEditingTitle] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileClosing, setProfileClosing] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [compactChat, setCompactChat] = useState(false);
+  const [showMobileOptions, setShowMobileOptions] = useState(false);
 
   // Initialize with the default chat if no history exists
   const getDefaultChat = () => ({
@@ -276,7 +270,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setIsProfileOpen(false);
+        handleCloseProfile();
       }
     };
     if (isProfileOpen) {
@@ -315,13 +309,25 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
     return () => clearTimeout(timeoutId);
   }, [messages, currentChatId]);
 
-  // Handle closing profile with animation
+  // Close mobile options menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMobileOptions && !event.target.closest('.mobile-options-menu')) {
+        setShowMobileOptions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMobileOptions]);
+
+  // Handle closing profile with pop-out animation
   const handleCloseProfile = () => {
     setProfileClosing(true);
     setTimeout(() => {
       setIsProfileOpen(false);
       setProfileClosing(false);
-    }, 200);
+    }, 400);
   };
 
   const handleSendMessage = async (e) => {
@@ -582,7 +588,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
         }`}
     >
       <Icon size={18} className="transition-colors duration-400 ease-in-out group-hover:text-black dark:group-hover:text-black transform-gpu transition-transform duration-400 ease-in-out group-hover:scale-110 group-hover:-rotate-6" />
-      <span className="font-semibold text-sm transition-colors duration-200 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">{label}</span>
+      <span className="font-semibold text-sm transition-colors duration-200 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500 font-['Cambria_Math']">{label}</span>
     </button>
   );
 
@@ -607,7 +613,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
               <BookOpen size={20} />
             </div>
-            <span className="font-black text-xl tracking-tight text-gray-900 dark:text-white">EzStudy</span>
+            <span className="font-black text-xl tracking-tight bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text drop-shadow-sm hover:scale-105 transition-transform duration-200 font-['Cambria_Math']">EzStudy</span>
           </div>
           <button onClick={() => setShowSidebar(false)} className="md:hidden p-1 text-gray-400 hover:text-gray-900 dark:hover:text-white">
             <X size={20} />
@@ -621,7 +627,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             label="Go to Home"
             icon={Home}
             active={false}
-            onClick={() => setShowLearningPage(false)}
+            onClick={() => navigate('/')}
           />
           <div className="h-px bg-gray-100 my-2 mx-2"></div>
           <NavItem
@@ -645,7 +651,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
           {activeTab === 'chat' && (
             <>
               <div className="p-4 flex items-center justify-between group">
-                <span className="text-base font-bold text-gray-400 uppercase tracking-widest pl-1 transition-colors duration-200 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">Recent Chats</span>
+                <span className="text-base font-bold text-gray-400 uppercase tracking-widest pl-1 transition-colors duration-200 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500 font-['Cambria_Math']">Recent Chats</span>
                 <button
                   onClick={createNewChat}
                   className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
@@ -721,70 +727,23 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                 )}
               </div>
               <div className="flex-1 text-left min-w-0">
-                <p className="text-xs font-bold text-gray-900 dark:text-white truncate group-hover:text-black dark:group-hover:text-black">{user?.name || user?.username || "Guest"}</p>
-                <p className="text-[10px] text-gray-400 dark:text-white truncate group-hover:text-black dark:group-hover:text-black">{user?.email || "No email"}</p>
+                <p className="text-xs font-bold text-gray-900 dark:text-white truncate group-hover:text-black dark:group-hover:text-black font-['Cambria_Math']">{user?.name || user?.username || "Guest"}</p>
+                <p className="text-[10px] text-gray-400 dark:text-white truncate group-hover:text-black dark:group-hover:text-black font-['Cambria_Math']">{user?.email || "No email"}</p>
               </div>
               <MoreVertical size={14} className="text-gray-400" />
             </button>
 
-            {isProfileOpen && (
-              <div className={`absolute top-0 left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-[100] ${profileClosing ? 'animate-out fade-out scale-95 duration-200' : 'animate-in fade-in scale-100 duration-300'}`}>
-
-                <div className="px-4 pb-3">
-                  <div className="mb-3">
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Profile</h3>
-                  </div>
-                  <div className="space-y-2">
-                    <div>
-                      <p className="text-xs font-bold text-gray-900 dark:text-white">{user?.name || user?.username || "Guest"}</p>
-                      <p className="text-[10px] text-gray-500 dark:text-gray-400">{user?.email || "No email"}</p>
-                    </div>
-                    <div className="space-y-1 pt-2 border-t border-gray-100 dark:border-gray-700">
-                      <div className="mb-2">
-                        <h4 className="text-xs font-semibold text-gray-900 dark:text-white">Account Details</h4>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Account Type</span>
-                        <span className="text-[10px] font-medium text-gray-900 dark:text-white">Free</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-gray-500 dark:text-gray-400">Joined</span>
-                        <span className="text-[10px] font-medium text-gray-900 dark:text-white">1/11/2026</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-gray-500 dark:text-gray-400">AI Interactions</span>
-                        <span className="text-[10px] font-medium text-gray-900 dark:text-white">∞</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center pt-3 border-t border-gray-100 dark:border-gray-700 mt-3">
-                      <button
-                        onClick={() => handleCloseProfile()}
-                        className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                        aria-label="Close profile"
-                      >
-                        <X size={12} className="animated-cross text-gray-400" />
-                        <span>Close</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="px-2 pb-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <button
-                      onClick={onLogout}
-                      className="flex-1 flex items-center space-x-2 px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors rounded-lg"
-                    >
-                      <LogOut size={14} />
-                      <span>Sign out</span>
-                    </button>
-                    <button
-                      onClick={() => handleCloseProfile()}
-                      className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 ml-1"
-                      aria-label="Close profile"
-                    >
-                      <X size={14} className="animated-cross text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
-                    </button>
-                  </div>
+            {(isProfileOpen || profileClosing) && (
+              <div className={`absolute bottom-full left-0 w-full mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 py-1 z-50 will-change-transform-opacity ${profileClosing ? 'animate-popOut' : 'animate-fadeIn'
+                }`}>
+                <div className="px-2 py-1">
+                  <button
+                    onClick={onLogout}
+                    className="w-full flex items-center space-x-2 px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors rounded-lg"
+                  >
+                    <LogOut size={14} />
+                    <span>Sign out</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -803,9 +762,12 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
             <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center text-white">
               <BookOpen size={12} />
             </div>
-            <span className="font-extrabold text-base tracking-tight text-gray-900 dark:text-white">EzStudy AI</span>
+            <span className="font-extrabold text-base tracking-tight text-gray-900 dark:text-white font-['Cambria_Math']">
+              <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text">EzStudy</span>
+              <span className="ml-1 text-gray-700 dark:text-gray-200"> AI</span>
+            </span>
           </div>
-          <button onClick={() => setShowLearningPage(false)} className="p-1 text-gray-400">
+          <button onClick={() => navigate('/')} className="p-1 text-gray-400">
             <Home size={18} />
           </button>
         </div>
@@ -857,12 +819,12 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
                 {/* Messages */}
                 <div className="space-y-6">
-                  {Array.isArray(messages) && messages.map((message) => {
+                  {Array.isArray(messages) && messages.map((message, index) => {
                     if (!message) return null;
                     const isGreeting = message.sender === "ai" && message.text.startsWith("Hello");
                     return (
                       <div
-                        key={message.id || Math.random()}
+                        key={message.id || `message-${index}`}
                         className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} animate-fadeIn group`}
                       >
                         <div className={`max-w-[95%] md:max-w-[85%] relative ${message.sender === "user" ? "bg-indigo-50/40 border border-indigo-100/50 rounded-2xl p-3 shadow-sm" : "w-full"}`}>
@@ -872,7 +834,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                                 <div className="w-5 h-5 bg-indigo-600 rounded-md flex items-center justify-center text-white shadow-sm">
                                   <BookOpen size={11} />
                                 </div>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 transition-colors duration-400 ease-in-out group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">EzStudy Assistant</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 transition-colors duration-400 ease-in-out group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500 font-['Cambria_Math']">EzStudy Assistant</span>
                               </div>
                               <button
                                 onClick={() => {
@@ -880,13 +842,13 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                                   setCopiedId(message.id);
                                   setTimeout(() => setCopiedId(null), 2000);
                                 }}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out p-1 text-gray-400 hover:text-indigo-600"
+                                className="opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 opacity-100 transition-opacity duration-300 ease-in-out p-1 text-gray-400 hover:text-indigo-600"
                               >
                                 {copiedId === message.id ? <Check size={14} /> : <Copy size={14} />}
                               </button>
                             </div>
                           )}
-                          <div className={`${isGreeting ? "prose-sm md:prose-base" : "prose-sm"} max-w-none break-words ${message.sender === "user" ? "text-gray-800 dark:text-gray-100 text-[13px]" : `text-gray-800 dark:text-gray-100 ${isGreeting ? "text-sm md:text-base" : "text-[13px] md:text-sm"} leading-relaxed`}`}>
+                          <div className={`${isGreeting ? "prose-sm md:prose-base" : "prose-sm"} max-w-none break-words ${message.sender === "user" ? "text-gray-800 dark:text-gray-100 text-[13px]" : `text-gray-800 dark:text-gray-100 ${isGreeting ? "text-sm md:text-base" : "text-[13px] md:text-sm"} leading-relaxed`}`} style={message.sender === "ai" ? { fontFamily: "'Cambria Math', 'Times New Roman', serif" } : {}}>
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                               {message.text || ""}
                             </ReactMarkdown>
@@ -936,7 +898,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {storedFiles.length > 0 ? storedFiles.map((file, idx) => (
-                    <div key={idx} className="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group">
+                    <div key={file.name || `file-${idx}`} className="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group">
                       <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                         <FileText size={24} />
                       </div>
@@ -965,7 +927,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                   onSubmit={handleSendMessage}
                   className={`relative flex items-end transition-all duration-500 rounded-[24px] border border-gray-200 outline-none focus:outline-none ${compactChat ? 'py-2 px-3 rounded-lg' : ''} ${isLoading ? 'bg-gray-50 border-gray-100' : 'bg-white dark:bg-gray-800 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]'}`}
                 >
-                  <div className="flex-1 min-h-[52px] flex flex-col justify-center px-5 py-3">
+                  <div className="flex-1 min-h-[60px] sm:min-h-[52px] flex flex-col justify-center px-4 sm:px-5 py-3 sm:py-3">
                     {/* Context Badge if using files */}
                     {files.length > 0 && useFileContext && (
                       <div className="flex items-center space-x-1.5 mb-2 bg-indigo-50/80 text-indigo-700 px-2.5 py-1 rounded-full w-fit border border-indigo-100 animate-fadeIn">
@@ -975,12 +937,12 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     )}
                     <textarea
                       ref={textareaRef}
-                      rows="1"
+                      rows="2"
                       value={inputText}
                       onChange={(e) => {
                         setInputText(e.target.value);
                         e.target.style.height = 'auto';
-                        e.target.style.height = Math.min(e.target.scrollHeight, 200) + 'px';
+                        e.target.style.height = Math.min(e.target.scrollHeight, window.innerWidth < 640 ? 300 : 200) + 'px';
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
@@ -989,15 +951,65 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                         }
                       }}
                       placeholder="Ask the AI anything..."
-                      className={`w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 ${compactChat ? 'text-sm py-0' : 'text-[14px] py-1'} text-gray-800 dark:text-gray-100 resize-none max-h-48 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium`}
+                      className={`w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 ${compactChat ? 'text-sm py-0' : 'text-[14px] py-1'} text-gray-800 dark:text-gray-100 resize-none max-h-48 sm:max-h-48 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium`}
                     />
                   </div>
 
-                  <div className="flex items-center space-x-1 pr-3 pb-3">
+                  <div className="flex items-center space-x-2 md:space-x-1 pr-3 pb-3">
+                    {/* Mobile options menu */}
+                    <div className="relative md:hidden">
+                      <button
+                        type="button"
+                        onClick={() => setShowMobileOptions(!showMobileOptions)}
+                        className="mobile-options-menu p-3 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-full transition-all duration-200"
+                        title="More options"
+                      >
+                        <MoreVertical size={20} />
+                      </button>
+                      {showMobileOptions && (
+                        <div className="mobile-options-menu absolute bottom-full right-0 mb-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-2 min-w-[160px]">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              fileInputRef.current?.click();
+                              setShowMobileOptions(false);
+                            }}
+                            className="w-full flex items-center space-x-3 p-3 text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                          >
+                            <Upload size={18} />
+                            <span className="text-sm font-medium font-['Cambria_Math']">Upload File</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUseFileContext(!useFileContext);
+                              setShowMobileOptions(false);
+                            }}
+                            className={`w-full flex items-center space-x-3 p-3 text-left rounded-lg transition-colors ${useFileContext ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                          >
+                            <Library size={18} />
+                            <span className="text-sm font-medium font-['Cambria_Math']">Library Context</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCompactChat(!compactChat);
+                              setShowMobileOptions(false);
+                            }}
+                            className={`w-full flex items-center space-x-3 p-3 text-left rounded-lg transition-colors ${compactChat ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                          >
+                            <Layout size={18} />
+                            <span className="text-sm font-medium font-['Cambria_Math']">Compact Chat</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Desktop buttons */}
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="p-2.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-full transition-all duration-200"
+                      className="hidden md:flex p-2.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-full transition-all duration-200"
                       title="Upload Study Material"
                     >
                       <Upload size={18} />
@@ -1005,7 +1017,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     <button
                       type="button"
                       onClick={() => setUseFileContext(!useFileContext)}
-                      className={`p-2.5 rounded-full transition-all duration-200 ${useFileContext ? 'text-indigo-600 bg-indigo-50 shadow-sm' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
+                      className={`hidden md:flex p-2.5 rounded-full transition-all duration-200 ${useFileContext ? 'text-indigo-600 bg-indigo-50 shadow-sm' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
                       title="Library Context"
                     >
                       <Library size={18} />
@@ -1013,7 +1025,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     <button
                       type="button"
                       onClick={() => setCompactChat(!compactChat)}
-                      className={`p-2.5 rounded-full transition-all duration-200 ${compactChat ? 'text-indigo-600 bg-indigo-50 shadow-sm' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
+                      className={`hidden md:flex p-2.5 rounded-full transition-all duration-200 ${compactChat ? 'text-indigo-600 bg-indigo-50 shadow-sm' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
                       title="Toggle compact chat"
                     >
                       <Layout size={18} />
@@ -1021,12 +1033,12 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     <button
                       type="submit"
                       disabled={!inputText.trim() || isLoading}
-                      className={`p-2.5 text-white bg-indigo-600 rounded-xl transition-all shadow-md ${!inputText.trim() || isLoading ? 'opacity-20 scale-95 cursor-not-allowed' : 'hover:bg-indigo-700 hover:scale-105 active:scale-95 shadow-indigo-200'}`}
+                      className={`p-3 md:p-2.5 text-white bg-indigo-600 rounded-xl transition-all shadow-md ${!inputText.trim() || isLoading ? 'opacity-20 scale-95 cursor-not-allowed' : 'hover:bg-indigo-700 hover:scale-105 active:scale-95 shadow-indigo-200'}`}
                     >
                       {isLoading ? (
                         <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                       ) : (
-                        <Send size={18} className="rotate-0 transition-transform group-hover:rotate-12" />
+                        <Send size={20} className="md:w-4.5 md:h-4.5 rotate-0 transition-transform group-hover:rotate-12" />
                       )}
                     </button>
                   </div>

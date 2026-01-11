@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Home, Info, Phone, Menu, X, Sun, Moon, LogOut, User, Bot, Camera, Upload, Crop, Check, X as CloseIcon } from "lucide-react";
 
-const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, onLoginClick, setShowLearningPage }) => {
+const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, onLoginClick }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [pendingScrollToTop, setPendingScrollToTop] = useState(false);
+  const [profileDropdownClosing, setProfileDropdownClosing] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isCroppingImage, setIsCroppingImage] = useState(false);
   const [cropImageSrc, setCropImageSrc] = useState(null);
@@ -14,11 +19,13 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const cropContainerRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const mobileProfileRef = useRef(null);
   const fileInputRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
-        setIsProfileDropdownOpen(false);
+      if ((profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) &&
+        (mobileProfileRef.current && !mobileProfileRef.current.contains(event.target))) {
+        handleCloseProfileDropdown();
       }
     };
 
@@ -31,31 +38,64 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
     };
   }, [isProfileDropdownOpen]);
 
-  const scrollToSection = (e, sectionId) => {
-    e.preventDefault();
+  const handleNavigation = (path) => {
     setIsMobileMenuOpen(false);
-
-    if (sectionId === "#learning") {
-      setShowLearningPage(true);
-      window.scrollTo({ top: 0, behavior: "instant" });
-      return;
+    if (path === '/' && window.location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+    navigate(path);
+  };
 
-    // Small delay to allow mobile menu to start closing for smoother transition
+  const handleLearningNavigation = () => {
+    setIsMobileMenuOpen(false);
+    if (user) {
+      navigate('/ai-console');
+    } else {
+      onLoginClick('signin');
+    }
+  };
+
+  const smoothScrollToTop = () => {
+    const startPosition = window.pageYOffset;
+    const distance = -startPosition;
+    const duration = 1500; // 1.5 seconds for slower animation
+    let startTime = null;
+
+    const easeInOutQuad = (t) => {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    };
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      const easeProgress = easeInOutQuad(progress);
+
+      window.scrollTo(0, startPosition + distance * easeProgress);
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
+  // If navigation caused a pending scroll request, perform it after location changes
+  useEffect(() => {
+    if (pendingScrollToTop && location.pathname === '/') {
+      smoothScrollToTop();
+      setPendingScrollToTop(false);
+    }
+  }, [location, pendingScrollToTop]);
+
+  // Handle closing profile dropdown with pop-out animation
+  const handleCloseProfileDropdown = () => {
+    setProfileDropdownClosing(true);
     setTimeout(() => {
-      if (!sectionId || sectionId === "#") {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-        return;
-      }
-
-      const section = document.querySelector(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 100);
+      setIsProfileDropdownOpen(false);
+      setProfileDropdownClosing(false);
+    }, 400);
   };
 
   const handleProfileImageUpload = async (event) => {
@@ -251,16 +291,28 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
       <div className={`fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3 w-[95%] sm:w-[90%] max-w-6xl z-50 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10 pointer-events-none'}`}>
         <nav className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-3xl rounded-full px-3 sm:px-8 py-3 sm:py-4 flex items-center justify-between flex-1 font-[Rubik]">
           {/* Logo */}
-          <div className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow hover:scale-105 transition-transform cursor-default font-['Cambria_Math']">
+          <Link
+            to="/"
+            onClick={(e) => {
+              e.preventDefault();
+              if (location.pathname === '/') {
+                smoothScrollToTop();
+              } else {
+                setPendingScrollToTop(true);
+                navigate('/');
+              }
+            }}
+            className="text-xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text tracking-wide drop-shadow hover:scale-105 transition-transform cursor-pointer font-['Cambria_Math']"
+          >
             EzStudy
-          </div>
+          </Link>
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex space-x-6 lg:space-x-10">
-            <NavItem icon={<Home size={16} className="text-blue-500" />} text="Home" href="#" onClick={(e) => scrollToSection(e, "#")} />
-            {user && <NavItem icon={<Bot size={16} className="text-indigo-500" />} text="AI Console" href="#learning" onClick={(e) => scrollToSection(e, "#learning")} />}
-            <NavItem icon={<Info size={16} className="text-purple-500" />} text="About" href="#about" onClick={(e) => scrollToSection(e, "#about")} />
-            <NavItem icon={<Phone size={16} className="text-red-400" />} text="Contact" href="#contact" onClick={(e) => scrollToSection(e, "#contact")} />
+            <NavItem icon={<Home size={16} className="text-blue-500" />} text="Home" href="/" onClick={() => setIsMobileMenuOpen(false)} />
+            {user && <NavItem icon={<Bot size={16} className="text-indigo-500" />} text="AI Console" href="/ai-console" onClick={() => setIsMobileMenuOpen(false)} />}
+            <NavItem icon={<Info size={16} className="text-purple-500" />} text="About" href="/#about" onClick={() => setIsMobileMenuOpen(false)} />
+            <NavItem icon={<Phone size={16} className="text-red-400" />} text="Contact" href="/#contact" onClick={() => setIsMobileMenuOpen(false)} />
           </div>
 
           {/* Mobile Menu Button Container */}
@@ -271,40 +323,53 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
             >
               {isMobileMenuOpen ? <X size={20} className="text-gray-900 dark:text-white" /> : <Menu size={20} className="text-gray-900 dark:text-white" />}
             </button>
+            {/* Mobile profile icon (same as navbar) */}
+            {user && (
+              <button
+                ref={mobileProfileRef}
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                aria-label="Open profile"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 flex items-center justify-center"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                  {user.name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                </div>
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
             <div className="absolute top-full left-0 right-0 mt-2 mx-2 md:hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-3xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 space-y-2 animate-in fade-in slide-in-from-top-4 duration-300">
               <button
-                onClick={(e) => scrollToSection(e, "#")}
+                onClick={() => handleNavigation('/')}
                 className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 flex items-center space-x-3 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:scale-105 active:scale-95"
               >
                 <Home size={18} className="text-blue-500" />
-                <span className="font-medium">Home</span>
+                <span className="font-medium font-['Cambria_Math']">Home</span>
               </button>
               {user && (
                 <button
-                  onClick={(e) => scrollToSection(e, "#learning")}
+                  onClick={handleLearningNavigation}
                   className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 flex items-center space-x-3 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:scale-105 active:scale-95"
                 >
                   <Bot size={18} className="text-indigo-500" />
-                  <span className="font-medium">AI Console</span>
+                  <span className="font-medium font-['Cambria_Math']">AI Console</span>
                 </button>
               )}
               <button
-                onClick={(e) => scrollToSection(e, "#about")}
+                onClick={() => handleNavigation('/#about')}
                 className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 flex items-center space-x-3 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:scale-105 active:scale-95"
               >
                 <Info size={18} className="text-purple-500" />
-                <span className="font-medium">About</span>
+                <span className="font-medium font-['Cambria_Math']">About</span>
               </button>
               <button
-                onClick={(e) => scrollToSection(e, "#contact")}
+                onClick={() => handleNavigation('/#contact')}
                 className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-300 flex items-center space-x-3 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:scale-105 active:scale-95"
               >
                 <Phone size={18} className="text-red-400" />
-                <span className="font-medium">Contact</span>
+                <span className="font-medium font-['Cambria_Math']">Contact</span>
               </button>
 
               <div className="pt-2 border-t border-gray-100 dark:border-gray-700 mt-2 flex flex-col space-y-2">
@@ -320,40 +385,37 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                     >
                       Login
                     </button>
-                  ) : (
-                    <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
-                      <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-200">
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden group">
-                          {false ? (
-                            <img
-                              src={user.profileImage}
-                              alt="Profile"
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-                              {user.name?.charAt(0) || user.email?.charAt(0)}
-                            </div>
-                          )}
-                          {/* Upload Disabled
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Camera size={12} className="text-white" />
-                          </div> */}
-                        </div>
-                        <span className="text-xs font-medium truncate max-w-[120px]">{user.name || user.email}</span>
-                      </div>
-                      <button
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          onLogout();
-                        }}
-                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 hover:text-red-600"
-                      >
-                        <LogOut size={18} />
-                      </button>
-                    </div>
-                  )}
+                  ) : null}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* removed floating bottom-right mobile profile button to keep profile in navbar */}
+
+          {/* Mobile Profile Dropdown */}
+          {isProfileDropdownOpen && user && (
+            <div ref={mobileProfileRef} className="absolute top-full right-4 md:hidden bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 min-w-[220px] z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                  {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white font-['Cambria_Math']">{user.name || "User"}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-['Cambria_Math']">{user.email}</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setIsProfileDropdownOpen(false);
+                    onLogout();
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center space-x-2 text-red-600 dark:text-red-400 font-['Cambria_Math']"
+                >
+                  <LogOut size={16} />
+                  <span>Logout</span>
+                </button>
               </div>
             </div>
           )}
@@ -381,18 +443,20 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                       <img
                         src={user.profileImage}
                         alt="Profile"
-                        className="w-full h-full object-cover rounded-full"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold">
                         {user.name?.charAt(0) || user.email?.charAt(0)}
                       </div>
                     )}
+
                   </button>
 
                   {/* Profile Dropdown */}
-                  {isProfileDropdownOpen && (
-                    <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                  {(isProfileDropdownOpen || profileDropdownClosing) && (
+                    <div ref={profileDropdownRef} className={`absolute top-full right-0 mt-2 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 z-50 ${profileDropdownClosing ? 'animate-popOut' : 'animate-in fade-in slide-in-from-top-2 duration-200'
+                      }`}>
                       <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center space-x-3 flex-1">
                           <div className="relative w-12 h-12 rounded-full overflow-hidden">
@@ -418,7 +482,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                           </div>
                         </div>
                         <button
-                          onClick={() => setIsProfileDropdownOpen(false)}
+                          onClick={handleCloseProfileDropdown}
                           className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 ml-2"
                           aria-label="Close profile"
                         >
@@ -627,9 +691,14 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
 const NavItem = ({ icon, text, href, onClick }) => {
   return (
-    <a
-      href={href}
-      onClick={onClick}
+    <Link
+      to={href}
+      onClick={(e) => {
+        if (href === '/' && window.location.pathname === '/') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (onClick) onClick(e);
+      }}
       className="flex items-center space-x-2 cursor-pointer text-gray-700 dark:text-gray-300 font-medium hover:text-purple-600 dark:hover:text-purple-400 group transition-all duration-300 font-['Cambria_Math']"
     >
       <span className="p-1.5 rounded-xl bg-gray-100/80 dark:bg-gray-700/80 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-lg group-hover:shadow-purple-500/20 transition-all duration-300 shadow-sm group-hover:bg-gradient-to-br group-hover:from-purple-100 group-hover:to-blue-100 dark:group-hover:from-purple-900/50 dark:group-hover:to-blue-900/50">
@@ -639,7 +708,7 @@ const NavItem = ({ icon, text, href, onClick }) => {
         {text}
         <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 group-hover:w-full transition-all duration-300"></span>
       </span>
-    </a>
+    </Link>
   );
 };
 

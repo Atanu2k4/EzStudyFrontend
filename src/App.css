@@ -229,6 +229,45 @@ h6 {
     will-change: transform, opacity;
 }
 
+@keyframes crossIn {
+    from {
+        transform: scale(0.85) rotate(-15deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes popOut {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+.animated-cross {
+    display: inline-block;
+    transform-origin: center;
+    animation: crossIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms ease;
+}
+
+.animated-cross:hover {
+    transform: rotate(90deg) scale(1.08);
+}
+
+.animate-popOut {
+    animation: popOut 400ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
 /* =========================================
    Theme Toggle Switch
    ========================================= */
