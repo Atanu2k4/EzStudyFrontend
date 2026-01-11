@@ -503,84 +503,29 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
           </div>
         </nav>
 
-        {/* Ultra Mind-Blowing Interactive Theme Toggle */}
-        <button
-          onClick={toggleDarkMode}
-          className="relative w-11 h-11 rounded-full overflow-hidden transition-all duration-300 group active:scale-75 hover:scale-125"
-          aria-label="Toggle Theme"
-          style={{
-            background: darkMode
-              ? 'radial-gradient(circle at 30% 30%, rgba(59,130,246,0.3), transparent 60%), radial-gradient(circle at 70% 70%, rgba(99,102,241,0.2), transparent 60%)'
-              : 'radial-gradient(circle at 30% 30%, rgba(251,191,36,0.3), transparent 60%), radial-gradient(circle at 70% 70%, rgba(249,115,22,0.2), transparent 60%)',
-            boxShadow: darkMode
-              ? '0 0 30px rgba(59,130,246,0.6), inset 0 0 20px rgba(59,130,246,0.2), 0 0 60px rgba(59,130,246,0.15)'
-              : '0 0 30px rgba(251,191,36,0.6), inset 0 0 20px rgba(251,191,36,0.2), 0 0 60px rgba(251,191,36,0.15)',
-          }}
-        >
-          {/* Quantum Particles */}
-          <div className="absolute inset-0 overflow-hidden rounded-full">
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                className={`absolute w-0.5 h-0.5 rounded-full ${darkMode ? 'bg-blue-300' : 'bg-yellow-300'} animate-pulse`}
-                style={{
-                  left: `${50 + Math.sin((i * 30) * Math.PI / 180) * 35}%`,
-                  top: `${50 + Math.cos((i * 30) * Math.PI / 180) * 35}%`,
-                  animationDelay: `${i * 50}ms`,
-                  boxShadow: darkMode ? '0 0 10px rgba(59,130,246,0.8)' : '0 0 10px rgba(251,191,36,0.8)',
-                  animation: `pulse ${1.5 + i * 0.1}s ease-in-out infinite`,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Rotating Rings */}
-          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div
-              className={`absolute inset-1 rounded-full border ${darkMode ? 'border-blue-400/60' : 'border-yellow-400/60'} animate-spin`}
-              style={{ animationDuration: '3s' }}
-            />
-            <div
-              className={`absolute inset-3 rounded-full border-2 ${darkMode ? 'border-indigo-400/40' : 'border-orange-400/40'} animate-spin`}
-              style={{ animationDuration: '5s', animationDirection: 'reverse' }}
-            />
-          </div>
-
-          {/* Icons Container */}
-          <div className="relative w-full h-full flex items-center justify-center">
-            {/* Sun */}
-            <Sun
-              className={`w-5 h-5 absolute transition-all duration-500 text-yellow-500 drop-shadow-lg ${darkMode ? 'opacity-0 scale-0 rotate-360' : 'opacity-100 scale-100 rotate-0'
-                }`}
-              style={{
-                filter: `drop-shadow(0 0 8px ${darkMode ? 'rgba(59,130,246,0)' : 'rgba(251,191,36,0.6)'})`
-              }}
-            />
-            {/* Moon */}
-            <Moon
-              className={`w-5 h-5 absolute transition-all duration-500 text-blue-400 drop-shadow-lg ${darkMode ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 rotate-360'
-                }`}
-              style={{
-                filter: `drop-shadow(0 0 8px ${darkMode ? 'rgba(59,130,246,0.6)' : 'rgba(59,130,246,0)'})`
-              }}
-            />
-          </div>
-
-          {/* Pulsing Aura */}
-          <div
-            className={`absolute -inset-3 rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-300 -z-10 blur-xl ${darkMode ? 'bg-blue-500' : 'bg-yellow-400'
-              } animate-pulse`}
-            style={{ animationDuration: '2s' }}
+        {/* New Day/Night Toggle from Uiverse.io */}
+        <div className="theme-toggle-wrapper">
+          <input
+            className="input"
+            id="dn"
+            type="checkbox"
+            checked={darkMode}
+            onChange={toggleDarkMode}
           />
-
-          {/* Shimmer Wave on Interaction */}
-          <div
-            className="absolute inset-0 rounded-full opacity-0 group-active:opacity-50 transition-opacity duration-100 group-active:animate-ping"
-            style={{
-              background: `conic-gradient(from 0deg, ${darkMode ? 'rgba(59,130,246,0.8)' : 'rgba(251,191,36,0.8)'}, transparent 70%)`
-            }}
-          />
-        </button>
+          <label className="toggle" htmlFor="dn">
+            <span className="toggle__handler">
+              <span className="crater crater--1"></span>
+              <span className="crater crater--2"></span>
+              <span className="crater crater--3"></span>
+            </span>
+            <span className="star star--1"></span>
+            <span className="star star--2"></span>
+            <span className="star star--3"></span>
+            <span className="star star--4"></span>
+            <span className="star star--5"></span>
+            <span className="star star--6"></span>
+          </label>
+        </div>
       </div>
 
       {/* Image Cropping Modal - Centered on Whole Page */}
