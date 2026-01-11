@@ -339,8 +339,8 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                   ) : (
                     <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                       <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-200">
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
-                          {user.profileImage ? (
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden group">
+                          {false ? (
                             <img
                               src={user.profileImage}
                               alt="Profile"
@@ -351,9 +351,10 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                               {user.name?.charAt(0) || user.email?.charAt(0)}
                             </div>
                           )}
+                          {/* Upload Disabled
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Camera size={12} className="text-white" />
-                          </div>
+                          </div> */}
                         </div>
                         <span className="text-sm font-medium truncate max-w-[120px]">{user.name || user.email}</span>
                       </div>
@@ -392,14 +393,16 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                     onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                     className="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 hover:scale-110 active:scale-95"
                   >
-                    {user.profileImage ? (
+                    {false ? (
                       <img
                         src={user.profileImage}
                         alt="Profile"
                         className="w-full h-full object-cover rounded-full"
                       />
                     ) : (
-                      <User size={20} className="text-gray-600 dark:text-gray-300 group-hover:scale-110 transition-transform" />
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                        {user.name?.charAt(0) || user.email?.charAt(0)}
+                      </div>
                     )}
                   </button>
 
@@ -407,8 +410,8 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                   {isProfileDropdownOpen && (
                     <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                       <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
-                          {user.profileImage ? (
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden group">
+                          {false ? (
                             <img
                               src={user.profileImage}
                               alt="Profile"
@@ -419,9 +422,10 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                               {user.name?.charAt(0) || user.email?.charAt(0)}
                             </div>
                           )}
+                          {/* Upload Disabled
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Camera size={16} className="text-white" />
-                          </div>
+                          </div> */}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
@@ -443,25 +447,17 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                       />
 
                       {/* Upload button */}
-                      <div className="mb-3">
+                      {/* Upload button - Disabled for Static Version */}
+                      {/* <div className="mb-3">
                         <button
                           onClick={handleImageClick}
-                          disabled={isUploadingImage}
-                          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-md disabled:hover:scale-100"
+                          disabled={true} 
+                          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-400 rounded-lg cursor-not-allowed transition-all duration-300"
                         >
-                          {isUploadingImage ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                              <span className="text-sm font-medium font-['Inter']">Uploading...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Upload size={16} />
-                              <span className="text-sm font-medium font-['Inter']">Change Profile Picture</span>
-                            </>
-                          )}
+                          <Camera size={16} />
+                          <span className="text-sm font-medium font-['Inter']">Upload Photo (Disabled)</span>
                         </button>
-                      </div>
+                      </div> */}
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
