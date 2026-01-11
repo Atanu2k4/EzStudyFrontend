@@ -11,8 +11,8 @@ const Preloader = () => {
     }, []);
 
     return (
-        <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-gray-900 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 scale-110 pointer-events-none'}`}>
-            <div className="relative w-[500px] h-[500px] flex items-center justify-center">
+        <div className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-gray-900 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 scale-110 pointer-events-none'} p-4`}>
+            <div className="relative w-full max-w-[500px] aspect-square flex items-center justify-center">
                 {/* Glowing background effect */}
                 <div className="absolute inset-0 bg-blue-500 opacity-20 blur-3xl rounded-full animate-pulse"></div>
 
@@ -20,7 +20,7 @@ const Preloader = () => {
                     src="https://lottie.host/940d982d-7f6f-4100-b740-e874954cea02/HIYUCWcoQJ.lottie"
                     loop
                     autoplay
-                    style={{ width: '500px', height: '500px' }}
+                    style={{ width: '100%', height: '100%' }}
                     className="relative z-10"
                 />
             </div>
