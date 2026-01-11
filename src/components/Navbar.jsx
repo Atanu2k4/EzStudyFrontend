@@ -207,56 +207,29 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
     setIsCroppingImage(false);
 
     try {
-      const formData = new FormData();
-      formData.append('profileImage', file);
+      // STATIC IMPLEMENTATION: Convert file to Base64 and save locally
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        
+        // Simulate a slight delay to look like an upload
+        setTimeout(() => {
+          console.log('Static upload successful');
+          const updatedUser = { ...user, profileImage: base64String };
+          localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
+          setUser(updatedUser);
+          
+          setIsUploadingImage(false);
+          setCropImageSrc(null);
+        }, 500);
+      };
+      
+      reader.readAsDataURL(file);
 
-      console.log('Sending cropped image upload request to:', `${import.meta.env.VITE_BACKEND_URL}/api/upload-profile-image`);
-      console.log('File to upload:', file);
-
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/upload-profile-image`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      console.log('Crop upload response status:', response.status);
-      console.log('Crop upload response headers:', Object.fromEntries(response.headers.entries()));
-
-      let data;
-      try {
-        data = await response.json();
-        console.log('Crop upload response data:', data);
-      } catch (jsonError) {
-        console.error('Failed to parse JSON response:', jsonError);
-        const textResponse = await response.text();
-        console.error('Raw response text:', textResponse);
-        throw new Error('Invalid response format from server');
-      }
-
-      if (data.success) {
-        console.log('Upload successful, image URL:', data.imageUrl);
-        const updatedUser = { ...user, profileImage: data.imageUrl };
-        localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
-        setUser(updatedUser);
-        console.log('Cropped image updated successfully');
-      } else {
-        console.error('Upload failed with error:', data.error);
-        alert('Failed to upload cropped image: ' + (data.error || 'Unknown error'));
-      }
     } catch (error) {
-      console.error('Crop upload error details:', {
-        message: error.message,
-        stack: error.stack,
-        name: error.name
-      });
-
-      if (error.message.includes('fetch')) {
-        alert('Network error: Unable to connect to server. Check your internet connection.');
-      } else if (error.message.includes('CORS')) {
-        alert('Connection blocked: CORS policy prevents the request.');
-      } else {
-        alert('Failed to upload cropped image: ' + error.message);
-      }
-    } finally {
+      console.error('Static upload error:', error);
+      alert('Failed to process image');
       setIsUploadingImage(false);
       setCropImageSrc(null);
     }
@@ -410,7 +383,7 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                   {isProfileDropdownOpen && (
                     <div ref={profileDropdownRef} className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gray-800 backdrop-blur-2xl rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4 animate-in fade-in slide-in-from-top-2 duration-200 z-50">
                       <div className="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden group">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden group cursor-pointer" onClick={handleImageClick}>
                           {false ? (
                             <img
                               src={user.profileImage}
@@ -422,13 +395,12 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                               {user.name?.charAt(0) || user.email?.charAt(0)}
                             </div>
                           )}
-                          {/* Upload Disabled
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Camera size={16} className="text-white" />
-                          </div> */}
+                          </div>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-xs font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
+                          <h3 className="text-[10px] font-semibold text-gray-900 dark:text-white truncate font-['Inter']">
                             {user.name || 'User'}
                           </h3>
                           <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate font-['Inter']">
@@ -447,17 +419,25 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
                       />
 
                       {/* Upload button */}
-                      {/* Upload button - Disabled for Static Version */}
-                      {/* <div className="mb-3">
+                      <div className="mb-3">
                         <button
                           onClick={handleImageClick}
-                          disabled={true} 
-                          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-400 rounded-lg cursor-not-allowed transition-all duration-300"
+                          disabled={isUploadingImage}
+                          className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95 hover:shadow-md disabled:hover:scale-100"
                         >
-                          <Camera size={16} />
-                          <span className="text-sm font-medium font-['Inter']">Upload Photo (Disabled)</span>
+                          {isUploadingImage ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                              <span className="text-sm font-medium font-['Inter']">Uploading...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Camera size={16} />
+                              <span className="text-sm font-medium font-['Inter']">Upload Photo</span>
+                            </>
+                          )}
                         </button>
-                      </div> */}
+                      </div>
 
                       <div className="space-y-2">
                         <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
