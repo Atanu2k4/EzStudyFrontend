@@ -216,6 +216,19 @@ h6 {
     animation-name: slideInRight;
 }
 
+/* Smooth fade-in used across components */
+.animate-fadeIn {
+    animation-name: fadeIn, slideInUp;
+    animation-duration: 420ms, 420ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1), cubic-bezier(0.22, 1, 0.36, 1);
+    animation-fill-mode: both;
+}
+
+/* Helpful utility to hint the browser to use GPU for transform/opacity animations */
+.will-change-transform-opacity {
+    will-change: transform, opacity;
+}
+
 /* =========================================
    Theme Toggle Switch
    ========================================= */

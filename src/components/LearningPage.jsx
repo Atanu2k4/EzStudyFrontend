@@ -27,7 +27,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 // Sub-components moved to top to avoid initialization errors
-const StatCard = ({ label, value, sub, color }) => {
+  const StatCard = ({ label, value, sub, color }) => {
   const colorMap = {
     blue: 'border-blue-100 bg-blue-50/30 text-blue-600',
     purple: 'border-purple-100 bg-purple-50/30 text-purple-600',
@@ -43,10 +43,10 @@ const StatCard = ({ label, value, sub, color }) => {
   );
 };
 
-const SidebarLink = ({ active, onClick, icon, label, collapsed }) => (
+  const SidebarLink = ({ active, onClick, icon, label, collapsed }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${active
+    className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-500 ease-in-out hover:scale-105 active:scale-95 ${active
       ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800/50 shadow-md hover:shadow-lg"
       : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 hover:shadow-sm"
       } ${collapsed ? 'justify-center' : ''}`}
@@ -566,7 +566,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
   const NavItem = ({ id, label, icon: Icon, active, onClick }) => (
     <button
       onClick={onClick}
-      className={`group w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${active
+      className={`group w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-400 ease-in-out ${active
         ? "bg-indigo-600 text-white shadow-md shadow-indigo-200"
         : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:hover:text-white"
         }`}
@@ -658,7 +658,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                     .map((chat) => (
                       <div
                         key={chat.id}
-                        className={`group relative rounded-lg border transition-all duration-200 ${chat.id === currentChatId
+                          className={`group relative rounded-lg border transition-all duration-400 ease-in-out ${chat.id === currentChatId
                           ? "bg-indigo-50/50 border-indigo-100"
                           : "bg-transparent border-transparent hover:bg-gray-50"
                           }`}
@@ -668,7 +668,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                           className="w-full text-left p-2.5 pr-8 focus:outline-none"
                         >
                           <h3 className={`text-base font-semibold truncate ${chat.id === currentChatId ? "text-indigo-700" : "text-gray-700"} group`}>
-                            <span className="transition-colors duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">{chat.title}</span>
+                            <span className="transition-colors duration-400 ease-in-out group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">{chat.title}</span>
                           </h3>
                           <p className="text-xs text-gray-500 mt-0.5 truncate transition-colors duration-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">{chat.preview}</p>
                         </button>
@@ -812,7 +812,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                                 <div className="w-5 h-5 bg-indigo-600 rounded-md flex items-center justify-center text-white shadow-sm">
                                   <BookOpen size={11} />
                                 </div>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 transition-colors duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">EzStudy Assistant</span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 transition-colors duration-400 ease-in-out group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">EzStudy Assistant</span>
                               </div>
                               <button
                                 onClick={() => {
@@ -820,7 +820,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                                   setCopiedId(message.id);
                                   setTimeout(() => setCopiedId(null), 2000);
                                 }}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-indigo-600"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out p-1 text-gray-400 hover:text-indigo-600"
                               >
                                 {copiedId === message.id ? <Check size={14} /> : <Copy size={14} />}
                               </button>
@@ -843,7 +843,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                                   setCopiedId(message.id);
                                   setTimeout(() => setCopiedId(null), 2000);
                                 }}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-gray-400 hover:text-indigo-600"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ml-2 text-gray-400 hover:text-indigo-600"
                               >
                                 {copiedId === message.id ? <Check size={10} /> : <Copy size={10} />}
                               </button>
@@ -880,9 +880,9 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                       <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
                         <FileText size={24} />
                       </div>
-                      <h3 className="font-bold text-gray-900 truncate mb-1 transition-colors duration-300 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">{file.name}</h3>
+                      <h3 className="font-bold text-gray-900 truncate mb-1 transition-colors duration-400 ease-in-out group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:via-pink-500 group-hover:to-red-500">{file.name}</h3>
                       <p className="text-xs text-gray-400 mb-4">{file.size ? (file.size / 1024).toFixed(1) : '—'} KB • PDF Document</p>
-                      <button type="button" onClick={() => discussFile(file)} className="text-xs font-bold text-indigo-600 hover:underline transition-colors duration-300 hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:via-pink-500 hover:to-red-500">Discuss this file →</button>
+                      <button type="button" onClick={() => discussFile(file)} className="text-xs font-bold text-indigo-600 hover:underline transition-colors duration-400 ease-in-out hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r hover:from-blue-500 hover:via-pink-500 hover:to-red-500">Discuss this file →</button>
                     </div>
                   )) : (
                     <div className="col-span-full py-20 text-center">
