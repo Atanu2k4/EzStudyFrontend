@@ -124,7 +124,11 @@ export default function Contact({ setActiveLegal }) {
             I agree to the{" "}
             <button
               type="button"
-              onClick={() => setActiveLegal('terms')}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setActiveLegal('terms');
+              }}
               className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 cursor-pointer font-['Cambria_Math']"
             >
               terms & conditions.
