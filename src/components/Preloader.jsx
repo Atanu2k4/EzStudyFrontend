@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DotLottiePlayer } from '@dotlottie/react-player';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const Preloader = () => {
     const [isVisible, setIsVisible] = useState(true);
@@ -16,7 +16,7 @@ const Preloader = () => {
                 {/* Glowing background effect */}
                 <div className="absolute inset-0 bg-blue-500 opacity-20 blur-3xl rounded-full animate-pulse"></div>
 
-                <DotLottiePlayer
+                <DotLottieReact
                     src="https://lottie.host/940d982d-7f6f-4100-b740-e874954cea02/HIYUCWcoQJ.lottie"
                     loop
                     autoplay
