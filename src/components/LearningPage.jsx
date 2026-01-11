@@ -754,6 +754,16 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                       </button>
                     </div>
                     <div className="space-y-1 pt-2 border-t border-gray-100 dark:border-gray-700">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="text-xs font-semibold text-gray-900 dark:text-white">Account Details</h4>
+                        <button
+                          onClick={() => setIsProfileOpen(false)}
+                          className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+                          aria-label="Close profile"
+                        >
+                          <X size={12} className="animated-cross text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300" />
+                        </button>
+                      </div>
                       <div className="flex justify-between items-center">
                         <span className="text-[10px] text-gray-500 dark:text-gray-400">Account Type</span>
                         <span className="text-[10px] font-medium text-gray-900 dark:text-white">Free</span>
