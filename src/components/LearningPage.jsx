@@ -758,6 +758,16 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                         <span className="text-[10px] font-medium text-gray-900 dark:text-white">∞</span>
                       </div>
                     </div>
+                    <div className="flex justify-center pt-3 border-t border-gray-100 dark:border-gray-700 mt-3">
+                      <button
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                        aria-label="Close profile"
+                      >
+                        <X size={12} className="text-gray-400" />
+                        <span>Close</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="px-2 pb-2">
