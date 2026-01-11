@@ -764,7 +764,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
                         className="flex items-center space-x-2 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                         aria-label="Close profile"
                       >
-                        <X size={12} className="text-gray-400" />
+                        <X size={12} className="animated-cross text-gray-400" />
                         <span>Close</span>
                       </button>
                     </div>
