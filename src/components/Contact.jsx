@@ -125,10 +125,10 @@ export default function Contact({ setActiveLegal }) {
             <button
               type="button"
               onClick={() => setActiveLegal('terms')}
-              className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 transition-all duration-300 cursor-pointer group font-['Cambria_Math']"
+              className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 cursor-pointer font-['Cambria_Math']"
             >
               terms & conditions.
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-600 to-pink-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-600 to-pink-600 hover:w-full rounded-full"></span>
             </button>
           </Label>
         </Field>

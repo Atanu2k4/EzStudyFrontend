@@ -11,13 +11,13 @@ const Footer = ({ setActiveLegal }) => {
           &copy; {new Date().getFullYear()} EzStudyAI. Empowering learners with AI.
         </p>
         <div className="flex space-x-6 text-sm">
-          <button onClick={() => setActiveLegal('privacy')} className="relative text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 cursor-pointer group font-['Cambria_Math']">
+          <button onClick={() => setActiveLegal('privacy')} className="relative text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer font-['Cambria_Math']">
             Privacy Policy
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:w-full rounded-full"></span>
           </button>
-          <button onClick={() => setActiveLegal('services')} className="relative text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 cursor-pointer group font-['Cambria_Math']">
+          <button onClick={() => setActiveLegal('services')} className="relative text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 cursor-pointer font-['Cambria_Math']">
             Terms of Service
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-red-600 group-hover:w-full transition-all duration-300 rounded-full"></span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-red-600 hover:w-full rounded-full"></span>
           </button>
         </div>
       </div>
