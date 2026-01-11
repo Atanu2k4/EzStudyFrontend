@@ -13,6 +13,9 @@ import {
   Plus,
   MessageSquare,
   Trash2,
+  Search,
+  Edit3,
+  MoreVertical,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -71,15 +74,26 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
   const [lastDocSummary, setLastDocSummary] = useState("");
   const [useFileContext, setUseFileContext] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true); // Changed to true so sidebar is visible by default on desktop
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editingChatId, setEditingChatId] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
 
   // Initialize with the default chat
   const defaultChat = {
     id: "default-chat",
-    title: "Current Chat",
+    title: "New Chat",
     preview: "Welcome to your AI learning assistant!",
     date: new Date(),
     isActive: true,
+    messages: [
+      {
+        id: Date.now(),
+        sender: "ai",
+        text: "Welcome to your AI learning assistant! What topic would you like to learn about today?",
+        timestamp: new Date(),
+      },
+    ],
   };
 
   const [chatHistory, setChatHistory] = useState([defaultChat]);
@@ -106,18 +120,30 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
       const savedChatHistory = localStorage.getItem("chatHistory");
       if (savedChatHistory) {
         const restoredHistory = JSON.parse(savedChatHistory);
-        setChatHistory(restoredHistory);
+        console.log("Restored chat history:", restoredHistory); // Debug log
+        // Ensure all chats have messages array
+        const historyWithMessages = restoredHistory.map(chat => ({
+          ...chat,
+          messages: chat.messages || [
+            {
+              id: Date.now(),
+              sender: "ai",
+              text: "Welcome to your AI learning assistant! What topic would you like to learn about today?",
+              timestamp: new Date(),
+            },
+          ],
+        }));
+        setChatHistory(historyWithMessages);
 
         // Find the last active chat or use the first one
         const activeChatId = localStorage.getItem("activeChatId");
         const chatToLoad =
-          restoredHistory.find((chat) => chat.id === activeChatId) ||
-          restoredHistory[0];
+          historyWithMessages.find((chat) => chat.id === activeChatId) ||
+          historyWithMessages[0];
 
         if (chatToLoad) {
           setCurrentChatId(chatToLoad.id);
-          const chatMessages = loadChatMessages(chatToLoad.id);
-          setMessages(chatMessages);
+          setMessages(chatToLoad.messages);
         }
       }
     } catch (error) {
@@ -181,6 +207,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
         // Update only the current chat
         updatedHistory[currentChatIndex] = {
           ...updatedHistory[currentChatIndex],
+          messages: messages, // Store messages in chat history object
           preview: messages.length > 0 ? getPreviewText(messages) : "New chat",
           date: new Date(),
         };
@@ -225,6 +252,11 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
+
+    // Update chat title if this is the first user message
+    const updatedMessages = [...messages, userMessage];
+    updateChatTitle(currentChatId, updatedMessages);
+
     setInputText("");
     setIsLoading(true);
     setShowAnimation(true);
@@ -340,8 +372,14 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
   // Create a new chat session
   const createNewChat = () => {
-    // Save current chat messages before creating a new one
-    saveChatMessages(currentChatId);
+    // Save current chat messages to chatHistory state
+    setChatHistory((prev) =>
+      prev.map((chat) =>
+        chat.id === currentChatId
+          ? { ...chat, messages: [...messages], preview: getPreviewText(messages) }
+          : chat
+      )
+    );
 
     const newChatId = `chat-${Date.now()}`;
     const welcomeMessage = {
@@ -353,16 +391,17 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
     const newChat = {
       id: newChatId,
-      title: `Chat ${chatHistory.length}`,
-      preview: "New conversation",
+      title: "New Chat",
+      preview: "Welcome to your AI learning assistant!",
       date: new Date(),
       isActive: true,
+      messages: [welcomeMessage],
     };
 
     // Update chat history - deactivate all other chats, add new chat
     setChatHistory((prev) => [
-      ...prev.map((chat) => ({ ...chat, isActive: false })),
       newChat,
+      ...prev.map((chat) => ({ ...chat, isActive: false })),
     ]);
 
     // Set new chat as current chat
@@ -375,42 +414,39 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
     setFiles([]);
   };
 
-  // Save the current chat's messages to local storage
-  const saveChatMessages = (chatId) => {
-    // Store current messages in localStorage keyed by chat ID
-    try {
-      localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
-    } catch (error) {
-      console.error("Error saving chat messages:", error);
+  // Generate chat title from first user message
+  const generateChatTitle = (messages) => {
+    const firstUserMessage = messages.find((msg) => msg.sender === "user");
+    if (firstUserMessage) {
+      const text = firstUserMessage.text;
+      // Take first 30 characters and clean it up
+      const title = text.length > 30 ? text.substring(0, 30) + "..." : text;
+      return title.replace(/[^\w\s]/g, "").trim() || "New Chat";
     }
+    return "New Chat";
   };
 
-  // Load messages for a specific chat
-  const loadChatMessages = (chatId) => {
-    try {
-      const savedMessages = localStorage.getItem(`chat_${chatId}`);
-      if (savedMessages) {
-        return JSON.parse(savedMessages);
-      }
-    } catch (error) {
-      console.error("Error loading chat messages:", error);
-    }
-
-    // Return default welcome message if no saved messages
-    return [
-      {
-        id: Date.now(),
-        sender: "ai",
-        text: "Welcome to your AI learning assistant! What topic would you like to learn about today?",
-        timestamp: new Date(),
-      },
-    ];
+  // Update chat title when first message is sent
+  const updateChatTitle = (chatId, messages) => {
+    setChatHistory((prev) =>
+      prev.map((chat) =>
+        chat.id === chatId && chat.title === "New Chat"
+          ? { ...chat, title: generateChatTitle(messages) }
+          : chat
+      )
+    );
   };
 
   // Switch to a different chat session
   const switchChat = (chatId) => {
-    // Save current chat messages before switching
-    saveChatMessages(currentChatId);
+    // Save current chat messages to chatHistory state before switching
+    setChatHistory((prev) =>
+      prev.map((chat) =>
+        chat.id === currentChatId
+          ? { ...chat, messages: [...messages], preview: getPreviewText(messages) }
+          : chat
+      )
+    );
 
     // Find the selected chat
     const selectedChat = chatHistory.find((chat) => chat.id === chatId);
@@ -427,9 +463,21 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
       // Set current chat ID
       setCurrentChatId(chatId);
 
-      // Load messages for selected chat
-      const chatMessages = loadChatMessages(chatId);
+      // Load messages from chatHistory state
+      const chatMessages = selectedChat.messages || [
+        {
+          id: Date.now(),
+          sender: "ai",
+          text: "Welcome to your AI learning assistant! What topic would you like to learn about today?",
+          timestamp: new Date(),
+        },
+      ];
       setMessages(chatMessages);
+
+      // Reset file context for new chat
+      setLastDocSummary("");
+      setUseFileContext(false);
+      setFiles([]);
 
       // Hide sidebar on mobile after switching
       setShowSidebar(false);
@@ -456,7 +504,14 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
     if (chatId === currentChatId) {
       const newCurrentChat = updatedHistory[0];
       setCurrentChatId(newCurrentChat.id);
-      const chatMessages = loadChatMessages(newCurrentChat.id);
+      const chatMessages = newCurrentChat.messages || [
+        {
+          id: Date.now(),
+          sender: "ai",
+          text: "Welcome to your AI learning assistant! What topic would you like to learn about today?",
+          timestamp: new Date(),
+        },
+      ];
       setMessages(chatMessages);
     }
   };
@@ -536,68 +591,154 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Chat History Sidebar */}
+        {/* Chat History Sidebar - ChatGPT Style */}
         <div
           className={`${showSidebar ? "translate-x-0" : "-translate-x-full"
-            } md:translate-x-0 absolute md:relative z-30 h-[calc(100%-4rem)] w-72 bg-white shadow-lg transition-transform duration-300 ease-in-out flex flex-col`}
+            } md:translate-x-0 absolute md:relative md:block z-30 h-[calc(100%-4rem)] w-80 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out flex flex-col`}
         >
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="font-semibold text-gray-700 flex items-center">
-              <Clock size={18} className="mr-2" />
-              Chat History
-            </h2>
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
             <button
               onClick={() => setShowSidebar(false)}
-              className="md:hidden p-1 rounded-full hover:bg-gray-200 transition-colors"
+              className="md:hidden p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
             >
               <X size={18} />
             </button>
           </div>
 
-          <div className="p-2">
+          {/* New Chat Button */}
+          <div className="p-3">
             <button
               onClick={createNewChat}
-              className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 px-4 rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 shadow-sm"
+              className="w-full flex items-center justify-center space-x-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 py-3 px-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm"
             >
-              <Plus size={18} />
-              <span>New Chat</span>
+              <Plus size={16} />
+              <span className="font-medium">New Chat</span>
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            {chatHistory.map((chat) => (
-              <div
-                key={chat.id}
-                onClick={() => switchChat(chat.id)}
-                className={`p-3 border-b cursor-pointer hover:bg-indigo-50 transition-colors ${chat.isActive ? "bg-indigo-100" : ""
-                  }`}
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center space-x-2">
-                    <MessageSquare size={16} className="text-indigo-600" />
-                    <span className="font-medium text-gray-800 truncate">
-                      {chat.title}
-                    </span>
-                  </div>
-                  {chatHistory.length > 1 && (
-                    <button
-                      onClick={(e) => deleteChat(chat.id, e)}
-                      className="p-1 text-gray-400 hover:text-red-500 rounded-full hover:bg-gray-200 transition-colors"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
-                <p className="text-sm text-gray-500 mt-1 truncate pl-6">
-                  {chat.preview}
-                </p>
-                <p className="text-xs text-gray-400 mt-1 pl-6">
-                  {formatDate(chat.date)}
-                </p>
-              </div>
-            ))}
+          {/* Search Bar */}
+          <div className="px-3 pb-2">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search chats..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
           </div>
-        </div>
+
+          {/* Chat List */}
+          <div className="flex-1 overflow-y-auto px-2">
+            {chatHistory.length === 0 ? (
+              <div className="p-4 text-center text-gray-500">
+                <p>No chats yet. Create one to get started!</p>
+              </div>
+            ) : (
+              chatHistory
+                .filter((chat) =>
+                  chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  chat.preview.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                .map((chat) => (
+                  <div
+                    key={chat.id}
+                    className={`group relative mb-1 rounded-lg transition-all duration-200 ${chat.isActive
+                        ? "bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-600"
+                        : "hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm"
+                      }`}
+                  >
+                    <button
+                      onClick={() => switchChat(chat.id)}
+                      className="w-full text-left p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-3 flex-1 min-w-0">
+                          <MessageSquare
+                            size={16}
+                            className={`mt-0.5 flex-shrink-0 ${chat.isActive ? "text-blue-600" : "text-gray-400"
+                              }`}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <h3
+                                className={`text-sm font-medium truncate ${chat.isActive
+                                    ? "text-gray-900 dark:text-white"
+                                    : "text-gray-700 dark:text-gray-300"
+                                  }`}
+                              >
+                                {editingChatId === chat.id ? (
+                                  <input
+                                    type="text"
+                                    value={editingTitle}
+                                    onChange={(e) => setEditingTitle(e.target.value)}
+                                    onBlur={() => {
+                                      if (editingTitle.trim()) {
+                                        setChatHistory((prev) =>
+                                          prev.map((c) =>
+                                            c.id === chat.id
+                                              ? { ...c, title: editingTitle.trim() }
+                                              : c
+                                          )
+                                        );
+                                      }
+                                      setEditingChatId(null);
+                                      setEditingTitle("");
+                                    }}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        e.target.blur();
+                                      } else if (e.key === "Escape") {
+                                        setEditingChatId(null);
+                                        setEditingTitle("");
+                                      }
+                                    }}
+                                    className="w-full bg-transparent border-none outline-none text-sm font-medium"
+                                    autoFocus
+                                  />
+                                ) : (
+                                  chat.title
+                                )}
+                              </h3>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingChatId(chat.id);
+                                  setEditingTitle(chat.title);
+                                }}
+                                className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-opacity ${chat.isActive ? "text-gray-500" : "text-gray-400"
+                                  }`}
+                              >
+                                <Edit3 size={12} />
+                              </button>
+                            </div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">
+                              {chat.preview}
+                            </p>
+                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                              {formatDate(chat.date)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      {chatHistory.length > 1 && (
+                        <button
+                          onClick={(e) => deleteChat(chat.id, e)}
+                          className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 hover:text-red-600 transition-opacity text-gray-400"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                        )}
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              )}
+            </div>
+          </div>
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
