@@ -194,7 +194,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
     try {
       const response = await fetch(
-        "https://ezstudybackend-1.onrender.com/ask",
+        `${import.meta.env.VITE_BACKEND_URL}/ask`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -245,7 +245,7 @@ const LearningPage = ({ setShowLearningPage, user, onLogout }) => {
 
     try {
       const response = await fetch(
-        "https://ezstudybackend-1.onrender.com/upload",
+        `${import.meta.env.VITE_BACKEND_URL}/upload`,
         {
           method: "POST",
           body: formData,
