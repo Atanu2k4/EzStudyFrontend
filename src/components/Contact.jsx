@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Field, Label, Switch } from "@headlessui/react";
 
-export default function Contact({ setActiveLegal }) {
+export default function Contact() {
   const [agreed, setAgreed] = useState(false);
 
   const handleSubmit = (e) => {
@@ -122,14 +123,13 @@ export default function Contact({ setActiveLegal }) {
           </Switch>
           <Label className="text-sm text-gray-600 dark:text-gray-400 font-['Cambria_Math']">
             I agree to the{" "}
-            <button
-              type="button"
-              onClick={() => setActiveLegal('terms')}
+            <Link
+              to="/terms-conditions"
               className="relative text-indigo-600 dark:text-indigo-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 cursor-pointer font-['Cambria_Math']"
             >
               terms & conditions.
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-600 to-pink-600 hover:w-full rounded-full"></span>
-            </button>
+            </Link>
           </Label>
         </Field>
 

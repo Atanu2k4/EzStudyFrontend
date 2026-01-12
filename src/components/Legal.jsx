@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, ArrowLeft, ShieldCheck, FileText, Lock, Scale, UserCheck, Zap, CreditCard, AlertTriangle, Database, Eye, Cpu, Handshake, Copyright, Activity, XCircle, Bot } from 'lucide-react';
 
-const Legal = ({ type, onClose }) => {
+const Legal = ({ type }) => {
+    const navigate = useNavigate();
     const content = {
         terms: {
             title: "Terms & Conditions",
@@ -117,7 +119,7 @@ const Legal = ({ type, onClose }) => {
             <div className="max-w-4xl mx-auto px-6 py-12">
                 <div className="flex justify-between items-center mb-10 sticky top-0 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md py-4 z-10 border-b border-gray-100 dark:border-gray-800">
                     <button
-                        onClick={onClose}
+                        onClick={() => navigate('/')}
                         className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group"
                     >
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-300" />
@@ -125,7 +127,7 @@ const Legal = ({ type, onClose }) => {
                     </button>
                     <h2 className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-500 to-red-400 text-transparent bg-clip-text font-['Cambria_Math']">{current.title}</h2>
                     <button
-                        onClick={onClose}
+                        onClick={() => navigate('/')}
                         className="p-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all active:scale-90 group"
                     >
                         <X size={20} className="dark:text-white group-hover:rotate-90 transition-transform duration-300" />

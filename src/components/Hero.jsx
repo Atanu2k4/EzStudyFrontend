@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { ArrowRight, Zap, Clock, Target, Bot } from "lucide-react";
 
-const Hero = ({ setShowLearningPage, onDemoClick, isReady, user, onLoginClick, onSignupClick }) => {
+const Hero = ({ onDemoClick, isReady, user, onLoginClick, onSignupClick }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleGoToConsole = () => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    setShowLearningPage(true);
+    navigate('/ai-console');
   };
 
   useEffect(() => {
@@ -55,9 +56,9 @@ const Hero = ({ setShowLearningPage, onDemoClick, isReady, user, onLoginClick, o
               <ArrowRight size={16} className="group-hover:translate-x-1 group-hover:scale-110 transition-all duration-300" />
             </button>
           )}
-          <a href="#about" className="px-4 sm:px-6 py-2 bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-full text-xs sm:text-sm hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300 w-full sm:w-auto text-center">
+          <Link to="/#about" className="px-4 sm:px-6 py-2 bg-transparent border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-full text-xs sm:text-sm hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300 w-full sm:w-auto text-center">
             Learn More
-          </a>
+          </Link>
         </div>
 
         {/* Feature Pills */}
