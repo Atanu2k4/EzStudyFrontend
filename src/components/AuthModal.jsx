@@ -75,23 +75,51 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess, initialMode = 'signin' }) =
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    // Compute SHA-256 hash for a string (returns hex)
+    const hashString = async (str) => {
+        const enc = new TextEncoder();
+        const data = enc.encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    const maskEmail = (em) => {
+        try {
+            const [local, domain] = em.split('@');
+            const localMasked = local.length > 1 ? local[0] + '***' : '***';
+            const domainParts = domain ? domain.split('.') : [];
+            const domainMasked = domainParts.length ? domainParts[0][0] + '***.' + domainParts.slice(1).join('.') : '***';
+            return `${localMasked}@${domainMasked}`;
+        } catch (e) {
+            return '***@***.***';
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
-        // Simulate network delay
-        setTimeout(() => {
-            let users = [];
-            try {
-                users = JSON.parse(localStorage.getItem('ezstudy_users') || '[]');
-            } catch (err) {
-                console.error("Error parsing users list:", err);
-                users = [];
-            }
+        // Load existing users (stored with hashes)
+        let users = [];
+        try {
+            users = JSON.parse(localStorage.getItem('ezstudy_users') || '[]');
+        } catch (err) {
+            console.error("Error parsing users list:", err);
+            users = [];
+        }
+
+        // small delay to keep UX consistent
+        await new Promise(r => setTimeout(r, 400));
+
+        try {
+            const emailNormalized = (email || '').trim().toLowerCase();
+            const emailHash = await hashString(emailNormalized);
+            const passwordHash = await hashString(password || '');
 
             if (mode === 'signup') {
-                if (users.find(u => u.email === email)) {
+                if (users.find(u => u.emailHash === emailHash)) {
                     setError('User already exists with this email');
                     setIsLoading(false);
                     return;
@@ -105,22 +133,38 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess, initialMode = 'signin' }) =
                     return;
                 }
 
-                const newUser = { email, password, name };
+                const newUser = {
+                    id: `u_${Date.now()}`,
+                    name: name || emailNormalized.split('@')[0],
+                    emailHash,
+                    passwordHash,
+                    createdAt: Date.now()
+                };
+
                 users.push(newUser);
+                // Persist only hashes and non-PII identifiers
                 localStorage.setItem('ezstudy_users', JSON.stringify(users));
-                localStorage.setItem('ezstudy_currentUser', JSON.stringify(newUser));
-                onAuthSuccess(newUser);
+
+                // Store a sanitized current user for UI (masked email, no raw credentials)
+                const safeCurrent = { id: newUser.id, name: newUser.name, email: maskEmail(emailNormalized), createdAt: newUser.createdAt };
+                localStorage.setItem('ezstudy_currentUser', JSON.stringify(safeCurrent));
+                onAuthSuccess(safeCurrent);
             } else {
-                const user = users.find(u => u.email === email && u.password === password);
+                const user = users.find(u => u.emailHash === emailHash && u.passwordHash === passwordHash);
                 if (user) {
-                    localStorage.setItem('ezstudy_currentUser', JSON.stringify(user));
-                    onAuthSuccess(user);
+                    const safeCurrent = { id: user.id, name: user.name, email: maskEmail(emailNormalized), createdAt: user.createdAt };
+                    localStorage.setItem('ezstudy_currentUser', JSON.stringify(safeCurrent));
+                    onAuthSuccess(safeCurrent);
                 } else {
                     setError('Invalid email or password');
                 }
             }
+        } catch (err) {
+            console.error('Auth error', err);
+            setError('An error occurred during authentication');
+        } finally {
             setIsLoading(false);
-        }, 800);
+        }
     };
 
     return (
