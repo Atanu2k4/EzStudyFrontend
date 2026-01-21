@@ -256,7 +256,28 @@ const Navbar = ({ darkMode, toggleDarkMode, isVisible, user, setUser, onLogout, 
 
           // Update user with new image
           const updatedUser = { ...user, profileImage: base64String };
-          localStorage.setItem('ezstudy_currentUser', JSON.stringify(updatedUser));
+          // Store a sanitized copy in localStorage (no raw credentials)
+          const maskEmail = (em) => {
+            try {
+              const [local, domain] = em.split('@');
+              const localMasked = local.length > 1 ? local[0] + '***' : '***';
+              const domainParts = domain ? domain.split('.') : [];
+              const domainMasked = domainParts.length ? domainParts[0][0] + '***.' + domainParts.slice(1).join('.') : '***';
+              return `${localMasked}@${domainMasked}`;
+            } catch (e) {
+              return '***@***.***';
+            }
+          };
+
+          const safeCurrent = {
+            id: updatedUser.id || `u_${Date.now()}`,
+            name: updatedUser.name || 'User',
+            email: updatedUser.email ? maskEmail(updatedUser.email) : (updatedUser.emailMasked || '***@***.***'),
+            createdAt: updatedUser.createdAt || Date.now(),
+            profileImage: updatedUser.profileImage
+          };
+
+          localStorage.setItem('ezstudy_currentUser', JSON.stringify(safeCurrent));
           setUser(updatedUser);
 
           console.log('Profile image updated successfully');

@@ -73,16 +73,84 @@ function App() {
   }
 
   useEffect(() => {
-    // Robust check for existing user in localStorage
-    try {
-      const savedUser = localStorage.getItem('ezstudy_currentUser')
-      if (savedUser) {
-        setUser(JSON.parse(savedUser))
+    // Robust check for existing user in localStorage and sanitize stored credentials
+    const hashString = async (str) => {
+      const enc = new TextEncoder();
+      const data = enc.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    const maskEmail = (em) => {
+      try {
+        const [local, domain] = em.split('@');
+        const localMasked = local.length > 1 ? local[0] + '***' : '***';
+        const domainParts = domain ? domain.split('.') : [];
+        const domainMasked = domainParts.length ? domainParts[0][0] + '***.' + domainParts.slice(1).join('.') : '***';
+        return `${localMasked}@${domainMasked}`;
+      } catch (e) {
+        return '***@***.***';
       }
-    } catch (err) {
-      console.error("Error parsing user from localStorage:", err);
-      localStorage.removeItem('ezstudy_currentUser');
-    }
+    };
+
+    (async () => {
+      try {
+        // migrate users list: if stored users contain raw email/password, replace with hashes
+        let users = [];
+        try {
+          users = JSON.parse(localStorage.getItem('ezstudy_users') || '[]');
+        } catch (e) {
+          users = [];
+        }
+
+        let migrated = false;
+        const newUsers = [];
+        for (const u of users) {
+          if (u.email && u.password) {
+            // legacy format, migrate
+            const emailNormalized = (u.email || '').trim().toLowerCase();
+            const emailHash = await hashString(emailNormalized);
+            const passwordHash = await hashString(u.password || '');
+            newUsers.push({ id: u.id || `u_${Date.now()}`, name: u.name || emailNormalized.split('@')[0], emailHash, passwordHash, createdAt: u.createdAt || Date.now() });
+            migrated = true;
+          } else if (u.emailHash && u.passwordHash) {
+            newUsers.push(u);
+          } else {
+            // unknown shape, skip sensitive fields
+            const safe = { id: u.id || `u_${Date.now()}`, name: u.name || 'User', emailHash: u.emailHash || null, passwordHash: u.passwordHash || null, createdAt: u.createdAt || Date.now() };
+            newUsers.push(safe);
+          }
+        }
+
+        if (migrated) {
+          localStorage.setItem('ezstudy_users', JSON.stringify(newUsers));
+        }
+
+        // sanitize currentUser: if it contains email/password, replace with masked version
+        try {
+          const savedUserRaw = localStorage.getItem('ezstudy_currentUser');
+          if (savedUserRaw) {
+            const parsed = JSON.parse(savedUserRaw);
+            if (parsed.password || parsed.email) {
+              const emailNorm = (parsed.email || '').trim().toLowerCase();
+              const masked = { id: parsed.id || `u_${Date.now()}`, name: parsed.name || (emailNorm.split('@')[0] || 'User'), email: maskEmail(emailNorm), createdAt: parsed.createdAt || Date.now() };
+              localStorage.setItem('ezstudy_currentUser', JSON.stringify(masked));
+              setUser(masked);
+              return;
+            }
+            // otherwise use as-is (already sanitized)
+            setUser(parsed);
+            return;
+          }
+        } catch (e) {
+          console.error('Error reading current user', e);
+          localStorage.removeItem('ezstudy_currentUser');
+        }
+      } catch (err) {
+        console.error("Error during credential migration:", err);
+      }
+    })();
 
     const timer = setTimeout(() => {
       setIsLoading(false)

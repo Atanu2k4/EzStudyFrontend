@@ -1,13 +1,13 @@
-# EzStudyFrontend
+# EzStudy Frontend
 
 ## 📝 Description
-EzStudy is an AI-powered learning platform that transforms the way students study and learn. Built with React and Express.js, it provides an intelligent learning console with AI-driven insights, personalized study plans, and smart document analysis capabilities.
+EzStudy is an AI-powered learning platform (React + Vite) that provides an intelligent learning console with AI-driven insights, personalized study plans, and document analysis.
 
 ## ✨ Features
-- **AI Learning Assistant**: Interactive chatbot powered by Groq API for personalized learning support
+-- **AI Learning Assistant**: Interactive chatbot using Google Gemini as primary with Groq fallback
 - **Document Analysis**: Upload and analyze PDF, DOC, PPT files with AI-powered summarization
-- **Chat History Persistence**: Save and restore conversations across sessions (localStorage)
-- **User Authentication**: Secure login/signup with Clerk authentication
+-- **Chat History Persistence**: Save and restore conversations across sessions (localStorage)
+-- **User Authentication**: Local auth modal (sample). Credentials are hashed client-side and only masked user info is stored in `localStorage`.
 - **Responsive Design**: Modern, mobile-friendly interface built with Tailwind CSS with special optimizations for mobile
 - **Smooth Navigation**: Elegant 1.5-second smooth scroll animation when clicking EzStudy logo
 - **Gradient UI Effects**: Beautiful gradient color effects on EzStudy branding throughout the app
@@ -19,7 +19,7 @@ EzStudy is an AI-powered learning platform that transforms the way students stud
 ## 🔧 Technologies Used
 - **Frontend**: React (Functional Components), Vite, Tailwind CSS, Lucide React icons
 - **Routing**: React Router DOM for SPA navigation
-- **Backend Integration**: Express.js API integration with Groq AI
+-- **Backend Integration**: Express.js API integration with Google Gemini (primary) and Groq fallback
 - **AI/ML**: Groq API (Llama 3.3 70B model) for chat completions and document analysis
 - **Authentication**: Clerk for user management
 - **Markdown Rendering**: React Markdown with GitHub Flavored Markdown support
@@ -33,44 +33,38 @@ EzStudy is an AI-powered learning platform that transforms the way students stud
 - npm or yarn
 - Git
 
-### Setup Instructions
+### Setup Instructions (local dev)
 
-1. **Clone the repository**
-```sh
-git clone https://github.com/Atanu2k4/EzStudyFrontend.git
+1. Install frontend dependencies and start Vite (default port 5178):
+
+```bash
 cd EzStudyFrontend
-```
-
-2. **Install dependencies**
-```sh
 npm install
+npm run dev
 ```
 
-3. **Environment Setup**
-Create a `.env` file in the root directory with the following variables:
+2. Backend (separate terminal):
+
+```bash
+cd ../EzStudyBackend
+npm install --legacy-peer-deps
+npm start    # or `node server.js`
+```
+
+3. Environment variables (frontend): Create `EzStudyFrontend/.env` with:
+
 ```env
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_BACKEND_URL=http://localhost:3001
 ```
 
-4. **Start the development server**
-```sh
-npm run dev
-```
-
-5. **Backend Setup** (in a separate terminal)
-```sh
-cd ../EzStudyBackend
-npm install
-npm run dev
-```
+4. Important backend env variables (see backend README): `GROQ_API_KEY` (required), `GOOGLE_GEMINI_API_KEY` (optional), `WEATHER_API_KEY`, `DEFAULT_LOCATION`.
 
 ## 🚀 Usage
-1. Register/Login using the authentication modal
-2. Click "Go to AI Learning Console" to access the main learning interface
-3. Upload documents for AI analysis or start chatting with the AI assistant
-4. Create multiple chat sessions and switch between them
-5. Your chat history is automatically saved and restored
+1. Open the app and sign in using the authentication modal (local sample).
+2. Click "Go to AI Learning Console" to access the main interface.
+3. Upload documents for AI analysis or start chatting with the AI assistant.
+4. Create multiple chat sessions and switch between them.
+5. Chat history is persisted in `localStorage` per user id; stored credentials are not saved in plaintext.
 
 ## 🤝 Contribution
 We welcome contributions! Here's how you can contribute:
@@ -83,5 +77,5 @@ We welcome contributions! Here's how you can contribute:
 
 ---
 
-Built with ❤️ for the EzStudy learning platform. Updated as of January 12, 2026.
+Built with ❤️ for the EzStudy learning platform. Updated as of January 21, 2026.
 

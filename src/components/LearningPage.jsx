@@ -57,7 +57,8 @@ const LearningPage = ({ user, onLogout }) => {
   const [activeTab, setActiveTab] = useState("chat"); // 'chat', 'docs', 'stats'
 
   // Use user-specific keys for localStorage to ensure separation
-  const userPrefix = user?.email || user?.username || "guest";
+  // Prefer non-sensitive `id` when available. Do NOT use email/username (PII) or credentials.
+  const userPrefix = user?.id || 'guest';
   const CHAT_HISTORY_KEY = `ez_chat_history_${userPrefix}`;
   const ACTIVE_CHAT_KEY = `ez_active_chat_id_${userPrefix}`;
   const FILES_KEY = `ez_files_${userPrefix}`;
@@ -143,6 +144,40 @@ const LearningPage = ({ user, onLogout }) => {
     }
   };
 
+  // Get device context (date/time, timezone, geolocation)
+  const getDeviceContext = async () => {
+    const now = new Date();
+    const deviceDate = now.toLocaleDateString();
+    const deviceTime = now.toLocaleTimeString();
+    const deviceYear = now.getFullYear();
+    const deviceMonth = now.toLocaleString('default', { month: 'long' });
+    const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+
+    const location = { label: null, lat: null, lon: null, accuracy: null };
+    if (navigator && navigator.geolocation) {
+      try {
+        const pos = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: false, timeout: 5000 });
+        });
+        if (pos && pos.coords) {
+          location.lat = pos.coords.latitude;
+          location.lon = pos.coords.longitude;
+          location.accuracy = pos.coords.accuracy;
+        }
+      } catch (e) {
+        // Geolocation failed or denied — silently ignore
+      }
+    }
+
+    return {
+      deviceDate,
+      deviceTime,
+      deviceYear,
+      deviceMonth,
+      deviceTimezone,
+      location
+    };
+  };
   // Get preview text from messages
   const getPreviewText = (msgs) => {
     if (!Array.isArray(msgs) || msgs.length === 0) return "New session";
@@ -361,7 +396,14 @@ const LearningPage = ({ user, onLogout }) => {
 
     formData.append('messages', JSON.stringify(historyMessages));
     formData.append('userMessage', messageText);
-    formData.append('config', JSON.stringify(aiConfig));
+    // Attach device context (date/time and geolocation) to config
+    try {
+      const deviceCtx = await getDeviceContext();
+      const combinedConfig = { ...aiConfig, deviceContext: deviceCtx };
+      formData.append('config', JSON.stringify(combinedConfig));
+    } catch (e) {
+      formData.append('config', JSON.stringify(aiConfig));
+    }
 
     // Add files to the request if any are stored or recently uploaded
     // Note: In this version, we're sending the current batch of files
@@ -430,7 +472,14 @@ const LearningPage = ({ user, onLogout }) => {
     formData.append("files", file);
     formData.append("userMessage", `Analyze this file: ${file.name}`);
     formData.append("messages", JSON.stringify([{ role: "user", content: `Analyze this file: ${file.name}` }]));
-    formData.append("config", JSON.stringify(aiConfig));
+    // attach device context for file analysis
+    try {
+      const deviceCtx = await getDeviceContext();
+      const combinedConfig = { ...aiConfig, deviceContext: deviceCtx };
+      formData.append("config", JSON.stringify(combinedConfig));
+    } catch (e) {
+      formData.append("config", JSON.stringify(aiConfig));
+    }
 
     try {
       const response = await fetch(
