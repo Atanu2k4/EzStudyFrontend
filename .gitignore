@@ -21,6 +21,7 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
-# Ignore environment files (including .env.local, .env.production, etc.)
+.sw?
+# Only sensitive files present in this directory
+# Environment files
 .env*
