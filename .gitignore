@@ -23,5 +23,4 @@ dist-ssr
 *.sln
 .sw?
 # Only sensitive files present in this directory
-# Environment files
 .env*
