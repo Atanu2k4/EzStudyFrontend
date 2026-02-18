@@ -77,7 +77,7 @@ export default function Contact() {
               type="text"
               name="last-name"
               className="mt-1 sm:mt-2 w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 sm:px-4 py-2.5 text-gray-900 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm"
-              placeholder="Doe"
+              placeholder="Example"
             />
           </div>
         </div>
